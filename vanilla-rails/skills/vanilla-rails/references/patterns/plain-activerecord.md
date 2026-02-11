@@ -9,95 +9,183 @@ Using Active Record directly is the default and often best approach in Vanilla R
 - No complex orchestration needed
 - Standard Active Record callbacks suffice
 
-## Examples
+## The Fizzy Pattern
 
-### Simple Creation
+Based on [Fizzy](https://github.com/basecamp/fizzy) - a production Rails application from 37signals.
+
+### Controllers Call Active Record Directly
 
 ```ruby
-# Controller directly creates record
-class Cards::CommentsController < ApplicationController
+class BoardsController < ApplicationController
   def create
-    @comment = @card.comments.create!(comment_params)
-    redirect_to @card
+    @board = Board.create! board_params.with_defaults(all_access: true)
+
+    respond_to do |format|
+      format.html { redirect_to board_path(@board) }
+      format.json { head :created, location: board_path(@board, format: :json) }
+    end
+  end
+
+  def update
+    @board.update! board_params
+    @board.accesses.revise granted: grantees, revoked: revokees if grantees_changed?
+
+    respond_to do |format|
+      format.html { redirect_to edit_board_path(@board), notice: "Saved" }
+      format.json { head :no_content }
+    end
+  end
+
+  def destroy
+    @board.destroy
+
+    respond_to do |format|
+      format.html { redirect_to root_path }
+      format.json { head :no_content }
+    end
   end
 end
 ```
 
-### Intention-Revealing Model Methods
+### Association Creation
 
 ```ruby
-# Rich model API
-class Card < ApplicationRecord
-  def gild
-    update!(gold: true, golded_at: Time.current)
-  end
+class Cards::CommentsController < ApplicationController
+  def create
+    @comment = @card.comments.create!(comment_params)
 
-  def close
-    update!(closed_at: Time.current)
-  end
-
-  def archive
-    update!(archived_at: Time.current)
+    respond_to do |format|
+      format.turbo_stream
+      format.json { head :created, location: card_comment_path(@card, @comment, format: :json) }
+    end
   end
 end
+```
 
-# Controller calls model methods
-class CardsController < ApplicationController
-  def gild
+### Thin Controllers, Rich Model Methods
+
+Controller delegates to intention-revealing model methods:
+
+```ruby
+class Cards::GoldnessesController < ApplicationController
+  def create
     @card.gild
-    redirect_to @card
+
+    respond_to do |format|
+      format.turbo_stream { render_card_replacement }
+      format.json { head :no_content }
+    end
   end
+
+  def destroy
+    @card.ungild
+
+    respond_to do |format|
+      format.turbo_stream { render_card_replacement }
+      format.json { head :no_content }
+    end
+  end
+end
+```
+
+The model handles the business logic:
+
+```ruby
+module Card::Golden
+  extend ActiveSupport::Concern
+
+  included do
+    has_one :goldness, dependent: :destroy
+    scope :golden, -> { joins(:goldness) }
+  end
+
+  def gild
+    create_goldness! unless golden?
+  end
+
+  def ungild
+    goldness&.destroy
+  end
+end
+```
+
+### Smart Defaults with `with_defaults`
+
+```ruby
+Board.create! board_params.with_defaults(all_access: true)
+
+# Or in model
+class Card < ApplicationRecord
+  belongs_to :creator, class_name: "User", default: -> { Current.user }
 end
 ```
 
 ### Model Callbacks for Internal State
 
 ```ruby
-class Recording < ApplicationRecord
-  belongs_to :bucket
-
-  before_create :set_position
+class Card < ApplicationRecord
+  before_save :set_default_title, if: :published?
+  before_create :assign_number
 
   private
+    def set_default_title
+      self.title = "Untitled" if title.blank?
+    end
 
-  def set_position
-    self.position = bucket.recordings.maximum(:position).to_i + 1
-  end
+    def assign_number
+      self.number ||= account.increment!(:cards_count).cards_count
+    end
 end
 ```
 
 ### Scopes for Common Queries
 
 ```ruby
-class Todo < ApplicationRecord
-  scope :incomplete, -> { where(completed: false) }
-  scope :completed, -> { where(completed: true) }
-  scope :due_soon, -> { where(due_date: ...1.week.from_now) }
-  scope :overdue, -> { where("due_date < ?", Date.today) }
+class Card < ApplicationRecord
+  scope :reverse_chronologically, -> { order created_at: :desc, id: :desc }
+  scope :chronologically, -> { order created_at: :asc, id: :asc }
+  scope :latest, -> { order last_active_at: :desc, id: :desc }
+  scope :closed, -> { joins(:closure) }
+  scope :open, -> { where.missing(:closure) }
 end
 
 # Usage
-@bucket.todos.incomplete.due_soon
+@board.cards.awaiting_triage.latest.with_golden_first.preloaded
 ```
 
 ### Associations with Business Logic
 
 ```ruby
-class Bucket < ApplicationRecord
-  has_many :recordings do
-    def todos
-      where(type: "Todo")
+class Board < ApplicationRecord
+  has_many :cards
+
+  has_many :tags, -> { distinct }, through: :cards
+end
+
+class Card < ApplicationRecord
+  # Named association extensions
+  has_many :comments do
+    def system
+      where(system: true)
     end
 
-    def notes
-      where(type: "Note")
+    def chronological
+      order created_at: :asc, id: :asc
     end
   end
 end
 
 # Usage
-@bucket.recordings.todos
-@bucket.recordings.notes
+@card.comments.system
+@card.comments.chronologically
+```
+
+### Simple Params with `expect`
+
+```ruby
+def card_params
+  params.expect(card: [ :title, :description, :image, :created_at, :last_active_at ])
+end
 ```
 
 ## When NOT to Use Plain Active Record
@@ -113,3 +201,5 @@ In these cases, consider:
 - Jobs (for async operations)
 
 But remember: **these are exceptions, not the default.**
+
+> "Vanilla Rails is plenty." - DHH
