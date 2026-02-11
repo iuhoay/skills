@@ -1,8 +1,8 @@
 # Before & After Examples
 
-Real-world examples showing the Vanilla Rails approach.
+Real-world examples showing the Vanilla Rails approach, based on [Fizzy](https://github.com/basecamp/fizzy) patterns.
 
-## Example 1: Card Gilding
+## Example 1: Card Gilding (Fizzy Pattern)
 
 ### Before (Over-Engineered)
 
@@ -45,7 +45,7 @@ class GildCardService
   end
 end
 
-# app/controllers/cards/gildnesses_controller.rb
+# app/controllers/cards/goldnesses_controller.rb
 class Cards::GoldnessesController < ApplicationController
   def create
     @card = Card.find(params[:card_id])
@@ -57,314 +57,323 @@ class Cards::GoldnessesController < ApplicationController
       redirect_to @card.bucket, alert: "Cannot gild this card"
     end
   end
+
+  def destroy
+    @card = Card.find(params[:card_id])
+    @card.update!(gold: false, golded_at: nil, golded_by: nil)
+    redirect_to @card.bucket
+  end
 end
 ```
 
-### After (Vanilla Rails)
+### After (Vanilla Rails - Fizzy Style)
 
 ```ruby
+# app/models/card/golden.rb - Concern
+module Card::Golden
+  extend ActiveSupport::Concern
+
+  included do
+    has_one :goldness, dependent: :destroy, class_name: "Card::Goldness"
+
+    scope :golden, -> { joins(:goldness) }
+    scope :with_golden_first, -> { left_outer_joins(:goldness).prepend_order("card_goldnesses.id IS NULL").preload(:goldness) }
+  end
+
+  def golden?
+    goldness.present?
+  end
+
+  def gild
+    create_goldness! unless golden?
+  end
+
+  def ungild
+    goldness&.destroy
+  end
+end
+
 # app/models/card.rb
 class Card < ApplicationRecord
-  belongs_to :bucket
-  belongs_to :golded_by, class_name: "User", optional: true
+  include Golden, Broadcastable, Eventable
 
-  def gild(by:)
-    return false unless can_be_gilded?(by)
-
-    update!(
-      gold: true,
-      golded_at: Time.current,
-      golded_by: by
-    )
-
-    broadcast_gold_card
-  end
-
-  def can_be_gilded?(user)
-    # authorization logic
-  end
-
-  private
-
-  def broadcast_gold_card
-    Turbo::StreamsChannel.broadcast_replace_later(
-      self,
-      target: "card_#{id}",
-      partial: "cards/card",
-      locals: { card: self }
-    )
-  end
+  # Eventable concern handles tracking
+  # Broadcastable concern handles broadcasting
 end
 
 # app/controllers/cards/goldnesses_controller.rb
 class Cards::GoldnessesController < ApplicationController
   def create
-    @card = Card.find(params[:card_id])
+    @card.gild
 
-    if @card.gild(by: Current.user)
-      redirect_to @card.bucket, notice: "Card has been gilded!"
-    else
-      redirect_to @card.bucket, alert: "Cannot gild this card"
+    respond_to do |format|
+      format.turbo_stream { render_card_replacement }
+      format.json { head :no_content }
+    end
+  end
+
+  def destroy
+    @card.ungild
+
+    respond_to do |format|
+      format.turbo_stream { render_card_replacement }
+      format.json { head :no_content }
     end
   end
 end
 ```
 
 **Changes:**
-- 45 LOC → 35 LOC (controller + model)
-- Logic moved to where it belongs (model)
-- Controller just passes user and handles response
-- Model owns the gilding behavior
+- Service eliminated → model method `gild` / `ungild`
+- Boolean column → dedicated `Goldness` model
+- Broadcasting handled by `Broadcastable` concern
+- Event tracking handled by `Eventable` concern
+- Controller is thin: just calls model methods
+- 80 LOC → ~20 LOC
 
 ---
 
-## Example 2: Order Processing
+## Example 2: Card Closing (Fizzy Pattern)
 
-### Before (Fat Service)
-
-```ruby
-# app/services/process_order_service.rb
-class ProcessOrderService
-  def initialize(order, payment_params)
-    @order = order
-    @payment_params = payment_params
-  end
-
-  def call
-    validate_order!
-    calculate_totals!
-    process_payment!
-    confirm_order!
-    send_notifications!
-    update_inventory!
-  end
-
-  private
-
-  def validate_order!
-    raise "Order has no items" if @order.items.empty?
-    raise "Order already processed" if @order.processed?
-  end
-
-  def calculate_totals!
-    subtotal = @order.items.sum(&:price)
-    discount = calculate_discount(subtotal)
-    tax = calculate_tax(subtotal - discount)
-
-    @order.update!(
-      subtotal: subtotal,
-      discount: discount,
-      tax: tax,
-      total: subtotal - discount + tax
-    )
-  end
-
-  def calculate_discount(subtotal)
-    return 0 if @order.items.sum(&:quantity) < 10
-    return 0.15 if @order.user.subscription_premium?
-    0.10
-  end
-
-  def calculate_tax(amount)
-    amount * TaxRate.for(@order.shipping_address.state)
-  end
-
-  def process_payment!
-    payment = Payment.create!(
-      order: @order,
-      amount: @order.total,
-      **@payment_params
-    )
-
-    payment.process!
-    raise "Payment failed" unless payment.success?
-  end
-
-  def confirm_order!
-    @order.update!(
-      processed_at: Time.current,
-      status: "confirmed"
-    )
-  end
-
-  def send_notifications!
-    OrderMailer.confirmation(@order).deliver_later
-    SlackNotifier.orders_channel.post("New order: #{@order.id}")
-  end
-
-  def update_inventory!
-    @order.items.each do |item|
-      product = item.product
-      product.update!(inventory: product.inventory - item.quantity)
-    end
-  end
-end
-```
-
-### After (Rich Model)
+### Before (Boolean Column)
 
 ```ruby
-# app/models/order.rb
-class Order < ApplicationRecord
-  has_many :items
-  has_one :payment
-  belongs_to :user
+# app/models/card.rb
+class Card < ApplicationRecord
+  attribute :closed, :boolean
+  attribute :closed_at, :datetime
+  attribute :closed_by, :integer
 
-  before_create :calculate_totals
-
-  def process!(payment_params)
-    transaction do
-      validate_for_processing!
-      payment = payments.create!(amount: total, **payment_params)
-      payment.process!
-      raise "Payment failed" unless payment.success?
-
-      update!(processed_at: Time.current, status: :confirmed)
-      items.each(&:deplete_inventory!)
-
-      # Notifications and inventory can be async
-      OrderConfirmationJob.perform_later(self)
-      InventoryUpdateJob.perform_later(self)
-    end
-  end
-
-  def processed?
-    processed_at.present?
-  end
-
-  private
-
-  def calculate_totals
-    self.subtotal = items.sum(&:total_price)
-    self.discount_amount = subtotal * discount_rate
-    self.tax_amount = (subtotal - discount_amount) * tax_rate
-    self.total = subtotal - discount_amount + tax_amount
-  end
-
-  def discount_rate
-    return 0.15 if user&.subscription_premium?
-    return 0.10 if items.sum(&:quantity) >= 10
-    0
-  end
-
-  def tax_rate
-    TaxRate.for(shipping_address.state)
-  end
-
-  def validate_for_processing!
-    raise "Order has no items" if items.empty?
-    raise "Order already processed" if processed?
-  end
-end
-
-# app/jobs/order_confirmation_job.rb
-class OrderConfirmationJob < ApplicationJob
-  def perform(order)
-    OrderMailer.confirmation(order).deliver_now
-    SlackNotifier.orders_channel.post("New order: #{order.id}")
-  end
-end
-
-# app/jobs/inventory_update_job.rb
-class InventoryUpdateJob < ApplicationJob
-  def perform(order)
-    order.items.each do |item|
-      item.product.update!(inventory: item.product.inventory - item.quantity)
-    end
-  end
-end
-```
-
-**Changes:**
-- Business logic moved to Order model
-- Calculations are model methods
-- Side effects moved to async jobs
-- Much clearer what belongs where
-
----
-
-## Example 3: User Activation
-
-### Before (Anemic Model + Service)
-
-```ruby
-# app/services/activate_user_service.rb
-class ActivateUserService
-  def initialize(user)
-    @user = user
-  end
-
-  def call
-    return false if @user.active?
-
-    @user.update!(
-      active: true,
-      activated_at: Time.current,
-      activation_token: nil
-    )
-
-    UserMailer.activation_confirmation(@user).deliver_later
-    @user.team&.increment!(:active_members_count)
-
-    true
-  end
-end
-```
-
-### After (Rich Model)
-
-```ruby
-# app/models/user.rb
-class User < ApplicationRecord
-  belongs_to :team, optional: true
-
-  def activate!
-    return false if active?
+  def close(user)
+    return false if closed?
 
     update!(
-      active: true,
-      activated_at: Time.current,
-      activation_token: nil
+      closed: true,
+      closed_at: Time.current,
+      closed_by: user.id
     )
 
-    team&.increment!(:active_members_count)
+    CardMailer.closed(self).deliver_later
   end
 
-  def active?
-    active == true
+  def reopen(user)
+    return unless closed?
+
+    update!(
+      closed: false,
+      closed_at: nil,
+      closed_by: nil
+    )
+  end
+
+  def closed?
+    closed == true
   end
 end
+```
 
-# app/models/user.rb - callback
-class User < ApplicationRecord
-  after_update_commit :send_activation_confirmation, if: :saved_change_to_active?
+### After (Dedicated State Model - Fizzy Style)
 
-  private
+```ruby
+# app/models/card/closeable.rb - Concern
+module Card::Closeable
+  extend ActiveSupport::Concern
 
-  def send_activation_confirmation
-    return unless saved_change_to_active?(from: false, to: true)
+  included do
+    has_one :closure, dependent: :destroy
 
-    UserMailer.activation_confirmation(self).deliver_later
+    scope :closed, -> { joins(:closure) }
+    scope :open, -> { where.missing(:closure) }
+    scope :recently_closed_first, -> { closed.order(closures: { created_at: :desc }) }
+  end
+
+  def closed?
+    closure.present?
+  end
+
+  def open?
+    !closed?
+  end
+
+  def close(user: Current.user)
+    unless closed?
+      transaction do
+        not_now&.destroy
+        create_closure!(user: user)
+        track_event(:closed, creator: user)
+      end
+    end
+  end
+
+  def reopen(user: Current.user)
+    if closed?
+      transaction do
+        closure&.destroy
+        track_event(:reopened, creator: user)
+      end
+    end
   end
 end
 ```
 
 **Changes:**
-- Activation logic belongs in User model
-- Email notification via callback (at the edge)
-- Team update as part of activation domain logic
-- Simpler, more intuitive
+- Boolean columns → dedicated `Closure` model
+- State tracking with first-class model
+- Query logic via scopes (`closed`, `open`, `recently_closed_first`)
+- Events tracked via `Eventable` concern
+- Transaction ensures atomic state changes
 
 ---
 
-## Key Takeaways
+## Example 3: Controller CRUD (Fizzy Pattern)
 
-1. **Models should own their behavior** - If an operation is done TO a model, it should be a method ON that model
+### Before (Fat Controller with Business Logic)
 
-2. **Services are for orchestration** - When coordinating multiple unrelated models, NOT for single-model operations
+```ruby
+class CardsController < ApplicationController
+  def create
+    @card = Card.new(card_params)
 
-3. **Side effects go to the edges** - Notifications, external API calls, etc. use callbacks or jobs at application boundaries
+    # Business logic in controller
+    @card.number = @card.board.cards.maximum(:number).to_i + 1
+    @card.title = "Untitled" if @card.title.blank?
+    @card.status = "published" if params[:publish]
 
-4. **Controllers stay thin** - Parse params, call models, render responses
+    if @card.save
+      redirect_to @card, notice: "Card created"
+    else
+      render :new
+    end
+  end
 
-5. **Less code is better code** - Vanilla Rails often means fewer files and clearer responsibilities
+  def update
+    @card = Card.find(params[:id])
+
+    if @card.update(card_params)
+      redirect_to @card, notice: "Card updated"
+    else
+      render :edit
+    end
+  end
+end
+```
+
+### After (Thin Controller - Fizzy Style)
+
+```ruby
+class CardsController < ApplicationController
+  def create
+    respond_to do |format|
+      format.html do
+        card = Current.user.draft_new_card_in(@board)
+        redirect_to card_draft_path(card)
+      end
+
+      format.json do
+        card = @board.cards.create!(card_params.merge(creator: Current.user, status: "published"))
+        head :created, location: card_path(card, format: :json)
+      end
+    end
+  end
+
+  def update
+    @card.update!(card_params)
+
+    respond_to do |format|
+      format.turbo_stream
+      format.json { render :show }
+    end
+  end
+end
+
+class Card < ApplicationRecord
+  before_save :set_default_title, if: :published?
+  before_create :assign_number
+
+  private
+
+  def set_default_title
+    self.title = "Untitled" if title.blank?
+  end
+
+  def assign_number
+    self.number ||= account.increment!(:cards_count).cards_count
+  end
+end
+```
+
+**Changes:**
+- Business logic moved to model callbacks
+- Controller just calls Active Record methods
+- Uses `with_defaults` for smart defaults
+- Proper response handling (HTML/JSON/TurboStream)
+
+---
+
+## Example 4: Comment Creation (Fizzy Pattern)
+
+### Before (Service Orchestration)
+
+```ruby
+class CreateCommentService
+  def initialize(card, user, params)
+    @card = card
+    @user = user
+    @params = params
+  end
+
+  def call
+    @comment = @card.comments.create(@params)
+
+    # Handle side effects
+    detect_mentions!(@comment)
+    broadcast_comment!(@comment)
+    track_activity!(@comment)
+    notify_mentioned_users!(@comment)
+
+    @comment
+  end
+end
+```
+
+### After (Plain Active Record + Concerns)
+
+```ruby
+class Cards::CommentsController < ApplicationController
+  def create
+    @comment = @card.comments.create!(comment_params)
+
+    respond_to do |format|
+      format.turbo_stream
+      format.json { head :created, location: card_comment_path(@card, @comment, format: :json) }
+    end
+  end
+end
+
+class Card < ApplicationRecord
+  include Eventable, Mentions, Broadcastable
+
+  # Eventable concern: creates Event record after create
+  # Mentions concern: detects and creates mentions
+  # Broadcastable concern: broadcasts via Turbo Streams
+end
+```
+
+**Changes:**
+- Service eliminated → plain Active Record
+- Side effects handled by concerns
+- Each concern is independently testable
+- Controller is extremely thin
+
+---
+
+## Key Takeaways (Fizzy Patterns)
+
+1. **State with dedicated models, not booleans** - `has_one :closure`, `has_one :goldness`
+2. **Concerns compose behavior** - `include Closeable, Golden, Postponable, Watchable`
+3. **Controllers are thin** - Call Active Record directly: `@card.update!(card_params)`
+4. **Side effects via concerns** - `Eventable`, `Broadcastable`, `Mentions` handle their domain
+5. **Callbacks for internal state** - `before_save :set_default_title`, `before_create :assign_number`
+6. **Smart defaults with `with_defaults`** - `Board.create!(params.with_defaults(all_access: true))`
+
+> "Vanilla Rails is plenty." - DHH
