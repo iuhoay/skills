@@ -83,6 +83,7 @@ When modifying this repository:
 6. Update root `.claude-plugin/marketplace.json` to reference the new skill
 
 ### Versioning
+- **IMPORTANT**: Increment version numbers in BOTH root `marketplace.json` and per-skill `plugin.json` before committing changes
 - Root `marketplace.json` version should be incremented when publishing updates
 - Individual skill versions in `plugin.json` can vary independently
 
