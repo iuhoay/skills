@@ -1,0 +1,19 @@
+{
+  "name": "iuhoay-skills",
+  "owner": {
+    "name": "iuhoay",
+    "url": "https://github.com/iuhoay"
+  },
+  "metadata": {
+    "description": "A collection of Claude Code skills for Rails development and code review.",
+    "categories": ["rails", "code-review", "productivity"],
+    "version": "1.0.0",
+    "license": "MIT"
+  },
+  "plugins": [
+    {
+      "name": "vanilla-rails",
+      "path": "vanilla-rails"
+    }
+  ]
+}

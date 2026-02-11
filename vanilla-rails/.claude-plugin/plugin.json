@@ -1,0 +1,20 @@
+{
+  "name": "vanilla-rails",
+  "version": "1.0.0",
+  "description": "Design and review Rails applications using Vanilla Rails philosophy from 37signals/Basecamp. Emphasizes thin controllers, rich domain models, and avoiding unnecessary service layers.",
+  "author": {
+    "name": "iuhoay",
+    "url": "https://github.com/iuhoay"
+  },
+  "repository": "https://github.com/iuhoay/skills",
+  "license": "MIT",
+  "keywords": [
+    "rails",
+    "ruby",
+    "vanilla-rails",
+    "code-review",
+    "thin-controllers",
+    "rich-models",
+    "dhh-style"
+  ]
+}
