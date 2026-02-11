@@ -12,6 +12,17 @@ allowed-tools:
 
 Design and review Rails applications using the Vanilla Rails philosophy from 37signals/Basecamp.
 
+## Based on Fizzy
+
+This skill is informed by [Fizzy](https://github.com/basecamp/fizzy) - a production Rails application from 37signals.
+
+**Key Fizzy patterns:**
+- Controllers call Active Record directly: `@board.update!(board_params)`, `@card.comments.create!(comment_params)`
+- Models composed of concerns: `include Closeable, Golden, Postponable, Watchable`
+- State tracked with dedicated models: `has_one :closure`, `has_one :goldness`
+- No `app/services/` directory
+- Complex multi-step processes use plain objects or ActiveRecord models with state
+
 ## Quick Start
 
 Vanilla Rails embraces Rails's built-in patterns and avoids premature abstraction:
@@ -71,12 +82,41 @@ Services are justified when:
 - Multi-step workflows with transaction boundaries
 - Operations that don't naturally belong to any single model
 
+**Fizzy uses plain objects for this:**
+
 ```ruby
-# OK: Service orchestrates multiple models
+# Multi-step signup with ActiveModel::Model
 class Signup
+  include ActiveModel::Model
+
+  validates :email_address, format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :full_name, presence: true
+
   def create_identity
-    Identity.create!(email_address: email_address)
-    # ... coordinate other models ...
+    @identity = Identity.find_or_create_by!(email_address: email_address)
+    @identity.send_magic_link(for: :sign_up)
+  end
+
+  def complete
+    # Complex account creation with rollback handling
+  end
+end
+```
+
+**Fizzy uses ActiveRecord models for stateful operations:**
+
+```ruby
+# Stateful import with status tracking
+class Account::Import < ApplicationRecord
+  enum :status, %w[ pending processing completed failed ].index_by(&:itself), default: :pending
+
+  def process(start: nil, callback: nil)
+    processing!
+    # Import logic with ZIP file handling
+    mark_completed
+  rescue => e
+    mark_as_failed
+    raise e
   end
 end
 ```
@@ -84,6 +124,7 @@ end
 ## Style Preferences
 
 ### Conditional Returns
+
 Prefer expanded conditionals over guard clauses (unless returning early at method start for non-trivial bodies).
 
 ```ruby
@@ -105,6 +146,7 @@ end
 ```
 
 ### Method Ordering
+
 1. `class` methods
 2. `public` methods (with `initialize` at top)
 3. `private` methods
@@ -112,6 +154,7 @@ end
 Order methods vertically by invocation order to help readers follow code flow.
 
 ### CRUD Controllers
+
 Model endpoints as REST operations. Don't add custom actions - introduce new resources instead.
 
 ```ruby
@@ -128,6 +171,7 @@ end
 ```
 
 ### Visibility Modifiers
+
 No newline under visibility modifiers; indent content under them.
 
 ```ruby
@@ -146,21 +190,38 @@ end
 If a module only has private methods, mark `private` at top with extra newline but don't indent.
 
 ### Async Operations
+
 Write shallow job classes that delegate to domain models:
 - Use `_later` suffix for methods that enqueue jobs
 - Use `_now` suffix for synchronous methods
 
 ```ruby
-def relay_later
-  Event::RelayJob.perform_later(self)
+# Fizzy pattern: _later enqueues, _now does the work
+module Event::Relaying
+  extend ActiveSupport::Concern
+
+  included do
+    after_create_commit :relay_later
+  end
+
+  def relay_later
+    Event::RelayJob.perform_later(self)
+  end
+
+  def relay_now
+    # actual implementation
+  end
 end
 
-def relay_now
-  # actual implementation
+class Event::RelayJob < ApplicationJob
+  def perform(event)
+    event.relay_now
+  end
 end
 ```
 
 ### Bang Methods
+
 Only use `!` for methods with a counterpart without `!`. Don't use `!` to flag destructive actions.
 
 ## Pattern Catalog
@@ -193,7 +254,7 @@ See [examples/](examples/) directory for before/after comparisons showing the Va
 > "Vanilla Rails is plenty." - DHH
 
 Most applications don't need layers beyond what Rails provides. Embrace:
-- `ActiveRecord` models as the home for business logic
+- `ActiveRecord` models as the home of business logic
 - Controllers as thin wrappers around model calls
 - Callbacks and concerns for code organization
 - Jobs and mailers called from models when appropriate
