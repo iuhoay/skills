@@ -5,190 +5,243 @@ Models should be the home of business logic in Vanilla Rails. Anemic models (wit
 ## What Makes a Model Rich?
 
 A rich model has:
-- **Business methods** - Operations that change state
+- **Intention-revealing methods** - State changes that clearly express intent
+- **Query methods** - Boolean methods for state queries
 - **Domain rules** - Validations and business logic
-- **Intention-revealing APIs** - Methods that clearly express intent
-- **Query methods** - Scopes and class methods for common queries
-- **Calculated attributes** - Methods that compute values
+- **Scopes** - Common queries as class-level APIs
+- **Concerns** - Behavior organized into cohesive modules
 
-## Examples
+## The Fizzy Pattern
 
-### State Changes
+Based on [Fizzy](https://github.com/basecamp/fizzy) - a production Rails application from 37signals.
+
+### Models Composed of Concerns
+
+The main model stays clean. Behavior is organized into concerns:
 
 ```ruby
 class Card < ApplicationRecord
-  # Intention-revealing state changes
-  def gild
-    update!(gold: true, golded_at: Time.current)
+  include Accessible, Assignable, Attachments, Broadcastable, Closeable,
+    Colored, Commentable, Entropic, Eventable, Exportable, Golden,
+    Mentions, Multistep, Pinnable, Postponable, Promptable, Readable,
+    Searchable, Stallable, Statuses, Taggable, Triageable, Watchable
+
+  belongs_to :board
+  belongs_to :creator, class_name: "User", default: -> { Current.user }
+
+  # Simple domain methods
+  def move_to(new_board)
+    transaction do
+      update!(board: new_board)
+      events.update_all(board_id: new_board.id)
+    end
   end
 
-  def close
-    update!(closed_at: Time.current)
+  def filled?
+    title.present? || description.present?
   end
 
-  def archive
-    update!(archived_at: Time.current)
-  end
+  private
+    def assign_number
+      self.number ||= account.increment!(:cards_count).cards_count
+    end
+end
+```
 
-  def reopen
-    update!(closed_at: nil)
-  end
+### State Changes with Dedicated Models
 
-  # Query methods
-  def open?
-    closed_at.nil?
+Track state with dedicated models, not boolean columns:
+
+```ruby
+module Card::Closeable
+  extend ActiveSupport::Concern
+
+  included do
+    has_one :closure, dependent: :destroy
+
+    scope :closed, -> { joins(:closure) }
+    scope :open, -> { where.missing(:closure) }
   end
 
   def closed?
-    !open?
+    closure.present?
   end
 
-  def gold?
-    gold?
+  def open?
+    !closed?
+  end
+
+  def close(user: Current.user)
+    unless closed?
+      transaction do
+        not_now&.destroy
+        create_closure! user: user
+        track_event :closed, creator: user
+      end
+    end
+  end
+
+  def reopen(user: Current.user)
+    if closed?
+      transaction do
+        closure&.destroy
+        track_event :reopened, creator: user
+      end
+    end
   end
 end
 ```
 
-### Business Logic
+### Intention-Revealing Methods
 
 ```ruby
-class Order < ApplicationRecord
-  # Business rules
-  def applicable_discount
-    return 0 if items.empty?
+module Card::Golden
+  extend ActiveSupport::Concern
 
-    if user.has_premium_subscription?
-      0.15
-    elsif items.sum(&:quantity) >= 10
-      0.10
-    else
-      0
-    end
+  included do
+    has_one :goldness, dependent: :destroy
+    scope :golden, -> { joins(:goldness) }
   end
 
-  # Calculated values
-  def subtotal
-    items.sum(&:total_price)
+  def golden?
+    goldness.present?
   end
 
-  def discount_amount
-    subtotal * applicable_discount
+  def gild
+    create_goldness! unless golden?
   end
 
-  def tax_amount
-    (subtotal - discount_amount) * tax_rate
+  def ungild
+    goldness&.destroy
+  end
+end
+```
+
+### Complex State Transitions
+
+```ruby
+module Card::Postponable
+  extend ActiveSupport::Concern
+
+  included do
+    has_one :not_now, dependent: :destroy
+    scope :postponed, -> { open.published.joins(:not_now) }
+    scope :active, -> { open.published.where.missing(:not_now) }
   end
 
-  def total
-    subtotal - discount_amount + tax_amount
+  def postponed?
+    open? && published? && not_now.present?
   end
 
-  # State machine-like behavior
-  def complete!
-    return if completed?
+  def active?
+    open? && published? && !postponed?
+  end
 
+  def auto_postpone(**args)
+    postpone(**args, event_name: :auto_postponed)
+  end
+
+  def postpone(user: Current.user, event_name: :postponed)
     transaction do
-      update!(completed_at: Time.current, completed_by: Current.user)
-      items.each(&:mark_fulfilled!)
-      send_confirmation
+      send_back_to_triage(skip_event: true)
+      reopen
+      activity_spike&.destroy
+      create_not_now!(user: user) unless postponed?
+      track_event event_name, creator: user
     end
   end
 
-  def completed?
-    completed_at.present?
+  def resume
+    transaction do
+      reopen
+      activity_spike&.destroy
+      not_now&.destroy
+    end
   end
 end
 ```
 
-### Domain Operations
+### Async Operations with _later Pattern
 
 ```ruby
-class Todo < ApplicationRecord
-  belongs_to :bucket
+module Card::Stallable
+  extend ActiveSupport::Concern
 
-  # Domain operations
-  def complete!
-    update!(completed_at: Time.current)
-    bucket.touch(:last_completed_at) if bucket.todos.reload.all?(&:completed?)
+  STALLED_AFTER_LAST_SPIKE_PERIOD = 14.days
+
+  included do
+    has_one :activity_spike, dependent: :destroy
+    scope :stalled, -> { open.active.with_activity_spikes.where(...) }
+
+    before_update :remember_to_detect_activity_spikes
+    after_update_commit :detect_activity_spikes_later, if: :should_detect_activity_spikes?
   end
 
-  def uncomplete!
-    update!(completed_at: nil)
+  def stalled?
+    if activity_spike.present?
+      open? && last_activity_spike_at < STALLED_AFTER_LAST_SPIKE_PERIOD.ago
+    end
   end
 
-  def reschedule_to!(date)
-    update!(due_date: date)
+  def detect_activity_spikes
+    Card::ActivitySpike::Detector.new(self).detect
   end
 
-  def move_to!(new_bucket)
-    update!(bucket: new_bucket)
-    # Auto-position could be a callback
-  end
+  private
+    def detect_activity_spikes_later
+      Card::ActivitySpike::DetectionJob.perform_later(self)
+    end
 end
 ```
 
-### Query Methods
+### Smart Defaults in Associations
 
 ```ruby
-class User < ApplicationRecord
-  # Class methods for queries
-  def self.with_active_subscription
-    joins(:subscription).merge(Subscription.active)
-  end
+belongs_to :creator, class_name: "User",
+  default: -> { Current.user }
 
-  def self.admins
-    where(admin: true)
-  end
-
-  def self.inactive_since(date)
-    where("last_sign_in_at < ?", date)
-  end
-
-  # Instance query methods
-  def can_perform?(action)
-    # authorization logic
-  end
-
-  def has_access_to?(resource)
-    # access control logic
-  end
-end
+belongs_to :account, default: -> { board.account }
 ```
 
-### Associations with Logic
+### Case/When Scopes for Dynamic Filtering
 
 ```ruby
-class Project < ApplicationRecord
-  has_many :tasks do
-    def incomplete
-      where(completed: false)
-    end
-
-    def completed
-      where(completed: true)
-    end
-
-    def overdue
-      incomplete.where("due_date < ?", Date.today)
-    end
-
-    def due_this_week
-      incomplete.where(due_date: Date.today..1.week.from_now)
-    end
+scope :indexed_by, ->(index) do
+  case index
+  when "stalled" then stalled
+  when "postponing_soon" then postponing_soon
+  when "closed" then closed
+  when "not_now" then postponed.latest
+  when "golden" then golden
+  when "draft" then drafted
+  else all
   end
+end
 
-  # Delegation for cleaner syntax
-  has_many :milestones
-  has_one :current_milestone, -> { where(active: true) }, class_name: "Milestone"
-
-  delegate :progress, to: :current_milestone, allow_nil: true
+scope :sorted_by, ->(sort) do
+  case sort
+  when "newest" then reverse_chronologically
+  when "oldest" then chronologically
+  when "latest" then latest
+  else latest
+  end
 end
 ```
+
+## Model Boundaries
+
+Models should NOT:
+- Access `Current` directly in business logic (use default params or keyword arguments)
+- Call mailers directly (use callbacks or concerns at edges)
+- Make external API calls (use jobs/services)
+
+These violations create coupling that breaks in background jobs and tests.
+
+Keep models focused on **domain logic** - the rules and behaviors that define what your application IS about.
 
 ## Signs of Anemic Models
 
 If you see these, enrich your models:
-
 - All business logic in services
 - Controllers doing business calculations
 - Models with only `has_many`, `belongs_to`, and `validates`
@@ -202,36 +255,35 @@ If you see these, enrich your models:
 What operations are done TO this model?
 
 ```ruby
-# Currently in UpdateUserStatusService:
-# - activate
-# - deactivate
-# - suspend
-# - archive
+# Currently in UpdateCardStatusService:
+# - close
+# - reopen
+# - gild
+# - postpone
 ```
 
-### Step 2: Add Methods
+### Step 2: Add Concern
 
 ```ruby
-class User < ApplicationRecord
-  def activate!
-    update!(status: :active, activated_at: Time.current)
+module Card::Statusable
+  extend ActiveSupport::Concern
+
+  included do
+    has_one :status, dependent: :destroy
   end
 
-  def deactivate!
-    update!(status: :inactive, deactivated_at: Time.current)
+  def close(user: Current.user)
+    transaction do
+      create_status!(type: :closed, user: user)
+      track_event :closed, creator: user
+    end
   end
 
-  def suspend!
-    update!(status: :suspended, suspended_at: Time.current)
-  end
-
-  def archive!
-    update!(status: :archived, archived_at: Time.current)
-  end
-
-  # Query methods
-  def active?
-    status == "active"
+  def reopen(user: Current.user)
+    transaction do
+      status&.destroy
+      track_event :reopened, creator: user
+    end
   end
 end
 ```
@@ -240,19 +292,8 @@ end
 
 ```ruby
 # Before
-UpdateUserStatusService.new(user).activate!
+UpdateCardStatusService.new(card).close!
 
 # After
-user.activate!
+card.close
 ```
-
-## Model Boundaries
-
-Models should NOT:
-- Access `Current` (request context)
-- Call mailers directly (use callbacks at edges)
-- Make external API calls (use jobs/services)
-
-These violations create coupling that breaks in background jobs and tests.
-
-Keep models focused on **domain logic** - the rules and behaviors that define what your application IS about.
