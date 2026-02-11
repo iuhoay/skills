@@ -6,13 +6,13 @@
   },
   "metadata": {
     "description": "A collection of Claude Code skills for Rails development and code review.",
-    "version": "1.2.0"
+    "version": "1.3.0"
   },
   "plugins": [
     {
       "name": "vanilla-rails",
       "description": "Design and review Rails applications using Vanilla Rails philosophy from 37signals/Basecamp. Emphasizes thin controllers, rich domain models, and avoiding unnecessary service layers.",
-      "version": "1.2.0",
+      "version": "1.3.0",
       "author": {
         "name": "iuhoay",
         "url": "https://github.com/iuhoay"
