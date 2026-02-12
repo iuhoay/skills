@@ -337,6 +337,12 @@ Before creating a service, consider:
 | Stateful operation | ApplicationRecord model |
 | Multi-step workflow | Plain object with ActiveModel::Model |
 
+## Official Resources
+
+For patterns that serve as alternatives to traditional service objects:
+- [Active Model Basics](https://guides.rubyonrails.org/active_model_basics.html) - For using `ActiveModel::Model` in plain objects.
+- [Active Job Basics](https://guides.rubyonrails.org/active_job_basics.html) - For async operations.
+
 ## Remember
 
 > "Services are the waiting room for abstractions that haven't emerged yet." - DHH

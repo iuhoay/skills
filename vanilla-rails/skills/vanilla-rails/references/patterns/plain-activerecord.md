@@ -180,13 +180,24 @@ end
 @card.comments.chronologically
 ```
 
-### Simple Params with `expect`
+### Simple Params with `expect` (Rails 8.0+)
+
+The preferred way to handle parameters in Rails 8.0+ is using `expect`:
 
 ```ruby
 def card_params
   params.expect(card: [ :title, :description, :image, :created_at, :last_active_at ])
 end
 ```
+
+## Official Documentation
+
+For comprehensive guidance on Active Record patterns, refer to the official Rails Guides:
+- [Active Record Basics](https://guides.rubyonrails.org/active_record_basics.html)
+- [Active Record Query Interface](https://guides.rubyonrails.org/active_record_querying.html)
+- [Active Record Associations](https://guides.rubyonrails.org/association_basics.html)
+- [Active Record Callbacks](https://guides.rubyonrails.org/active_record_callbacks.html)
+- [Active Record Validations](https://guides.rubyonrails.org/active_record_validations.html)
 
 ## When NOT to Use Plain Active Record
 

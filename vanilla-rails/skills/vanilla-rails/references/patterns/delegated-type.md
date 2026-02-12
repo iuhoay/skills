@@ -85,6 +85,23 @@ Use Delegated Type when:
 - Each type has significantly different attributes (avoiding STI bloat).
 - You want to keep the "Rich Model" principle by putting type-specific logic in the subtypes and shared logic in the supertype.
 
+## Use Case: Unified Timeline
+
+A common use case from the Rails Guides is building a unified timeline where different content types (Post, Comment) are treated as a single stream of items.
+
+```ruby
+# app/models/timeline_item.rb
+class TimelineItem < ApplicationRecord
+  delegated_type :timelineable, types: %w[ Post Comment ]
+end
+
+# Querying all items ordered by date
+TimelineItem.order(created_at: :desc)
+
+# Filtering by specific subtype
+TimelineItem.posts
+```
+
 ## Comparison
 
 | Feature | STI | Polymorphic | Delegated Type |
@@ -93,6 +110,11 @@ Use Delegated Type when:
 | **Table Bloat** | High | Low | Low |
 | **Shared Identity** | Yes | No | Yes |
 | **Ease of Querying** | High | Medium | High |
+
+## Official Guidance
+
+For more detailed implementation details and advanced options, refer to the official Rails Guides:
+- [Active Record Associations - Delegated Type](https://guides.rubyonrails.org/association_basics.html#delegated-type)
 
 ## Fizzy/37signals Pattern
 

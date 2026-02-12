@@ -164,6 +164,19 @@ These don't organize by behavior—they just spread related code across files.
 - Sharing behavior between unrelated objects (use composition)
 - Just trying to reduce model line count
 
+## Official Guidance
+
+For more details on implementation and advanced usage of `ActiveSupport::Concern`, see the official documentation:
+- [ActiveSupport::Concern API Documentation](https://api.rubyonrails.org/classes/ActiveSupport/Concern.html)
+- [Active Support Core Extensions - Concerns](https://guides.rubyonrails.org/active_support_core_extensions.html#activesupport-concern)
+
+## Best Practices from Rails Guides
+
+1. **Naming Conventions**: Use suffixes like `-able` or `-ing` (e.g., `Searchable`, `Timestampable`, `Validatable`) to clearly indicate the behavior being added.
+2. **Single Responsibility**: Each concern should encapsulate a single, specific aspect of functionality.
+3. **Avoid Deep Nesting**: While concerns can include other concerns, keep hierarchies shallow to ensure the code remains understandable.
+4. **Testing**: Write dedicated tests for your concerns to ensure they behave correctly when included in various models.
+
 ## Real-World Examples from Fizzy
 
 | Concern | Purpose |
