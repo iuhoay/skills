@@ -231,6 +231,7 @@ Only use `!` for methods with a counterpart without `!`. Don't use `!` to flag d
 | Plain Active Record | Simple CRUD, no coordination needed | [plain-activerecord.md](references/patterns/plain-activerecord.md) |
 | Rich Model API | Complex behavior single model should own | [rich-models.md](references/patterns/rich-models.md) |
 | Concern | Shared behavior across models | [concerns.md](references/patterns/concerns.md) |
+| Delegated Type | "Is-a" relationships with shared identity | [delegated-type.md](references/patterns/delegated-type.md) |
 | Service/Form | Only when genuinely justified | [when-to-use-services.md](references/patterns/when-to-use-services.md) |
 
 ## Red Flags (Over-Engineering)

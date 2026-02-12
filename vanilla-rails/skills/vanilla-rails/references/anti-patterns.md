@@ -446,6 +446,7 @@ For the positive patterns that counter these anti-patterns:
 | [Plain Active Record](patterns/plain-activerecord.md) | Using Active Record directly |
 | [Rich Models](patterns/rich-models.md) | Building rich domain models |
 | [Concerns](patterns/concerns.md) | Sharing behavior across models |
+| [Delegated Type](patterns/delegated-type.md) | Preferred way to handle inheritance |
 | [When to Use Services](patterns/when-to-use-services.md) | When services are genuinely justified |
 
 ## Remember
