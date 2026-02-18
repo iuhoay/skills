@@ -20,10 +20,10 @@ Install and configure a specific recommended Rails development dependency.
 ## Examples
 
 ```
-/deps:install strong_migrations
-/deps:install herb
-/deps:install bullet
-/deps:install letter_opener
+/rails-deps:install strong_migrations
+/rails-deps:install herb
+/rails-deps:install bullet
+/rails-deps:install letter_opener
 ```
 
 ## What This Does
