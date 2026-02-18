@@ -1,6 +1,6 @@
 {
   "name": "vanilla-rails",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "Design and review Rails applications using Vanilla Rails philosophy from 37signals/Basecamp. Emphasizes thin controllers, rich domain models, and avoiding unnecessary service layers.",
   "author": {
     "name": "iuhoay",
