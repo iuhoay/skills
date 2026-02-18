@@ -1,0 +1,21 @@
+{
+  "name": "rails-deps",
+  "version": "1.0.0",
+  "description": "Configure recommended Rails development dependencies for better developer experience and code quality.",
+  "author": {
+    "name": "iuhoay",
+    "url": "https://github.com/iuhoay"
+  },
+  "repository": "https://github.com/iuhoay/skills",
+  "license": "MIT",
+  "keywords": [
+    "rails",
+    "ruby",
+    "dependencies",
+    "gems",
+    "strong_migrations",
+    "herb",
+    "bullet",
+    "letter_opener"
+  ]
+}
