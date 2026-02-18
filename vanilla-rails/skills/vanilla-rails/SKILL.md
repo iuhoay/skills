@@ -49,9 +49,9 @@ Vanilla Rails embraces Rails's built-in patterns and avoids premature abstractio
 
 ## What Would You Like To Do?
 
-1. **Review code changes** - Run `/vanilla:review` for Vanilla Rails architecture review
-2. **Analyze codebase** - Run `/vanilla:analyze` to identify over-engineering
-3. **Plan simplification** - Run `/vanilla:simplify [goal]` to plan refactoring toward Vanilla Rails
+1. **Review code changes** - Run `/vanilla-rails:review` for Vanilla Rails architecture review
+2. **Analyze codebase** - Run `/vanilla-rails:analyze` to identify over-engineering
+3. **Plan simplification** - Run `/vanilla-rails:simplify [goal]` to plan refactoring toward Vanilla Rails
 4. **Review PR/implementation** - I'll evaluate against Vanilla Rails principles
 
 ## Core Principles

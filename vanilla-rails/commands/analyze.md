@@ -5,10 +5,10 @@ Analyze a Rails codebase for over-engineering and opportunities to simplify towa
 ## Usage
 
 ```
-/vanilla:analyze                    # Analyze entire codebase
-/vanilla:analyze [path]             # Analyze specific directory
-/vanilla:analyze:services           # Focus on service layer analysis
-/vanilla:analyze:models             # Focus on model health
+/vanilla-rails:analyze                    # Analyze entire codebase
+/vanilla-rails:analyze [path]             # Analyze specific directory
+/vanilla-rails:analyze:services           # Focus on service layer analysis
+/vanilla-rails:analyze:models             # Focus on model health
 ```
 
 ## Analysis Areas

@@ -5,10 +5,10 @@ Code review from Vanilla Rails philosophy perspective.
 ## Usage
 
 ```
-/vanilla:review                    # Review uncommitted changes
-/vanilla:review [file_path]        # Review specific file
-/vanilla:review --staged           # Review staged changes
-/vanilla:review --branch main      # Review changes vs branch
+/vanilla-rails:review                    # Review uncommitted changes
+/vanilla-rails:review [file_path]        # Review specific file
+/vanilla-rails:review --staged           # Review staged changes
+/vanilla-rails:review --branch main      # Review changes vs branch
 ```
 
 ## Process

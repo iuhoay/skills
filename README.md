@@ -19,9 +19,9 @@ Design and review Rails applications using Vanilla Rails philosophy from 37signa
 
 | Command | Purpose |
 |---------|---------|
-| `/vanilla:review` | Review code changes for over-engineering |
-| `/vanilla:analyze` | Analyze codebase for simplification opportunities |
-| `/vanilla:simplify [goal]` | Plan incremental simplification |
+| `/vanilla-rails:review` | Review code changes for over-engineering |
+| `/vanilla-rails:analyze` | Analyze codebase for simplification opportunities |
+| `/vanilla-rails:simplify [goal]` | Plan incremental simplification |
 
 **Philosophy:**
 
