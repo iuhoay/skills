@@ -35,72 +35,33 @@ Run `/rails-deps:check` to see which recommended gems are installed in your proj
 
 ## Gem Details
 
-### strong_migrations
+For detailed installation and configuration guides, see:
 
-Prevents dangerous database migrations that could cause downtime.
+| Gem | Reference |
+|-----|-----------|
+| `strong_migrations` | [strong_migrations.md](references/strong_migrations.md) - Catch unsafe migrations |
+| `herb` | [herb.md](references/herb.md) - HTML+ERB parsing and tooling |
+| `bullet` | [bullet.md](references/bullet.md) - N+1 query detection |
+| `letter_opener` | [letter_opener.md](references/letter_opener.md) - Email preview |
 
-**Install:**
-```ruby
-# Gemfile
+### Quick Install Commands
+
+```bash
+# strong_migrations
 gem "strong_migrations"
-```
+bundle install && rails generate strong_migrations:install
 
-```bash
-bundle install
-rails generate strong_migrations:install
-```
-
-### herb
-
-Powerful HTML+ERB tooling with language server, formatter, and linter.
-
-**Install:**
-```ruby
-# Gemfile
+# herb
 gem "herb", group: :development
-```
+bundle install && bundle exec herb analyze .
 
-```bash
-bundle install
-bundle exec herb analyze .
-```
-
-**VS Code Extension:** [marcoroth.herb-lsp](https://marketplace.visualstudio.com/items?itemName=marcoroth.herb-lsp)
-
-### bullet
-
-Detect N+1 queries and unused eager loading.
-
-**Install:**
-```ruby
-# Gemfile
+# bullet
 gem "bullet", group: :development
-```
+# Add configuration to config/environments/development.rb
 
-**Configuration** (`config/environments/development.rb`):
-```ruby
-config.after_initialize do
-  Bullet.enable = true
-  Bullet.alert = true
-  Bullet.bullet_logger = true
-  Bullet.console = true
-end
-```
-
-### letter_opener
-
-Preview emails in your browser instead of sending.
-
-**Install:**
-```ruby
-# Gemfile
+# letter_opener
 gem "letter_opener", group: :development
-```
-
-**Configuration** (`config/environments/development.rb`):
-```ruby
-config.action_mailer.delivery_method = :letter_opener
-config.action_mailer.perform_deliveries = true
+# Set delivery_method to :letter_opener in development.rb
 ```
 
 ## Triggers
