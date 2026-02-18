@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "A collection of Claude Code skills for Rails development and code review.",
-    "version": "1.6.3"
+    "version": "1.7.0"
   },
   "plugins": [
     {
@@ -20,6 +20,18 @@
       "homepage": "https://github.com/iuhoay/skills",
       "tags": ["rails", "ruby", "vanilla-rails", "code-review", "thin-controllers", "rich-models", "dhh-style"],
       "source": "./vanilla-rails"
+    },
+    {
+      "name": "rails-deps",
+      "description": "Configure recommended Rails development dependencies for better developer experience and code quality. Includes strong_migrations, herb, bullet, and letter_opener.",
+      "version": "1.0.0",
+      "author": {
+        "name": "iuhoay",
+        "url": "https://github.com/iuhoay"
+      },
+      "homepage": "https://github.com/iuhoay/skills",
+      "tags": ["rails", "ruby", "dependencies", "gems", "strong_migrations", "herb", "bullet", "letter_opener", "development"],
+      "source": "./rails-deps"
     }
   ]
 }
