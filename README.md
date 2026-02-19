@@ -20,12 +20,22 @@ Configure recommended Rails development dependencies for better developer experi
 
 Recommended gems: strong_migrations, herb, bullet, letter_opener.
 
+### Ruby LSP
+
+LSP integration for Ruby/Rails development with instant diagnostics, code navigation (go to definition, find references, hover), and language awareness.
+
+**Prerequisite:** Install [ruby-lsp](https://github.com/Shopify/ruby-lsp) first:
+```bash
+gem install ruby-lsp
+```
+
 ## Installation
 
 ```
 /plugin marketplace add iuhoay/skills
 /plugin install vanilla-rails@iuhoay-skills
 /plugin install rails-deps@iuhoay-skills
+/plugin install ruby-lsp@iuhoay-skills
 ```
 
 ## License

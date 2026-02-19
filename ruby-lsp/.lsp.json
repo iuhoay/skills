@@ -1,0 +1,9 @@
+{
+  "ruby": {
+    "command": "ruby-lsp",
+    "extensionToLanguage": {
+      ".rb": "ruby"
+    },
+    "transport": "stdio"
+  }
+}
