@@ -1,0 +1,14 @@
+{
+  "name": "ruby-lsp",
+  "version": "1.0.0",
+  "description": "LSP integration for Ruby/Rails development with instant diagnostics, code navigation (go to definition, find references, hover), and language awareness",
+  "author": {
+    "name": "iuhoay",
+    "url": "https://github.com/iuhoay"
+  },
+  "homepage": "https://github.com/iuhoay/skills",
+  "repository": "https://github.com/iuhoay/skills",
+  "license": "MIT",
+  "keywords": ["ruby", "lsp", "ruby-lsp", "ide", "autocomplete", "rails"],
+  "lspServers": "./.lsp.json"
+}
