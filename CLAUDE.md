@@ -14,11 +14,12 @@ This is a **monorepo** of Claude Code skills. Each skill is a self-contained pac
 
 ```
 .claude-plugin/marketplace.json    # Root plugin manifest (aggregates all skills)
+README.md                          # Installation and usage guide
 ```
 
 ### Individual Skill Structure
 
-Each skill subdirectory (e.g., `vanilla-rails/`) follows this structure:
+Each skill subdirectory follows this structure:
 
 ```
 skill-name/
@@ -34,6 +35,8 @@ skill-name/
         ├── references/          # Pattern libraries and documentation
         └── examples/            # Before/after code examples
 ```
+
+Some skills may omit `agents/` if they have no subagents, or include extra config files (e.g., `.lsp.json` for ruby-lsp).
 
 ### Key Architecture Concepts
 
@@ -51,24 +54,83 @@ skill-name/
 
 - **Plugin Name**: iuhoay-skills
 - **Categories**: productivity, utilities
-- **Version**: 1.0.0
+- **Version**: 1.8.0
 - **License**: MIT
 - **Owner**: iuhoay (https://github.com/iuhoay)
 
 ## Available Skills
 
-### Vanilla Rails
+### 1. Vanilla Rails (`vanilla-rails/`)
 
 Design and review Rails applications using Vanilla Rails philosophy from 37signals/Basecamp.
 
+**Version:** 1.6.3
+
 **Commands:**
-- `/vanilla:review` - Review code changes for over-engineering
-- `/vanilla:analyze` - Analyze codebase for simplification opportunities
-- `/vanilla:simplify [goal]` - Plan incremental simplification
+- `/vanilla-rails:review` - Review code changes for over-engineering
+- `/vanilla-rails:analyze` - Analyze codebase for simplification opportunities
+- `/vanilla-rails:simplify [goal]` - Plan incremental simplification
 
 **Triggers:** "service layer", "service object", "thin controller", "rich model", "vanilla rails", "dhh style", "over-engineering", "unnecessary abstraction"
 
 **Philosophy:** Thin controllers, rich domain models, no service layers unless genuinely justified.
+
+**Allowed Tools:** Grep, Glob, Read, Task
+
+**Key references:**
+- `references/anti-patterns.md` - Model boundary violations, service layer abuse, anemic models, fat controllers
+- `references/patterns/` - plain-activerecord, rich-models, concerns, delegated-type, when-to-use-services
+- `examples/before-after.md` - Real-world before/after refactoring examples
+
+**Agent:** `agents/vanilla-rails-reviewer.md` - Applies Vanilla Rails review principles as a subagent
+
+---
+
+### 2. Rails Deps (`rails-deps/`)
+
+Configure and manage recommended Rails development dependencies for better developer experience.
+
+**Version:** 1.0.0
+
+**Commands:**
+- `/rails-deps:check` - Check which recommended gems are installed
+- `/rails-deps:install [gem]` - Install and configure a specific gem
+- `/rails-deps:setup` - Interactive setup for all recommended gems
+
+**Triggers:** "rails dependencies", "rails gems", "development gems", "strong_migrations", "bullet gem", "letter_opener", "herb gem"
+
+**Allowed Tools:** Read, Glob, Grep, Bash
+
+**Recommended gems:**
+- **strong_migrations** - Catch unsafe database migrations in development
+- **herb** - HTML+ERB parsing, formatting, and linting
+- **bullet** - Detect N+1 query problems
+- **letter_opener** - Preview emails in browser instead of sending
+
+**References:** Detailed setup docs in `references/` for each gem (strong_migrations.md, herb.md, bullet.md, letter_opener.md)
+
+---
+
+### 3. Ruby LSP (`ruby-lsp/`)
+
+Ruby Language Server Protocol integration for code intelligence in editors.
+
+**Version:** 1.0.0
+
+**Configuration:** `.lsp.json` defines LSP server settings:
+```json
+{
+  "ruby": {
+    "command": "ruby-lsp",
+    "extensionToLanguage": {".rb": "ruby"},
+    "transport": "stdio"
+  }
+}
+```
+
+**Features:** Instant diagnostics, go-to-definition, find references, hover documentation, language-aware code navigation for Ruby/Rails projects.
+
+---
 
 ## Development
 
@@ -76,18 +138,22 @@ When modifying this repository:
 
 ### Adding a New Skill
 1. Create skill directory with `agents/`, `commands/`, `skills/` subdirectories
-2. Add `.claude-plugin/plugin.json` with skill metadata
-3. Create `SKILL.md` with triggers, description, allowed tools
+2. Add `.claude-plugin/plugin.json` with skill metadata (name, version, keywords, author)
+3. Create `skills/skill-name/SKILL.md` with triggers, description, allowed tools (YAML frontmatter)
 4. Create command markdown files in `commands/`
-5. Create agent markdown files in `agents/` (if needed)
+5. Create agent markdown files in `agents/` (if needed; use `model: inherit`)
 6. Update root `.claude-plugin/marketplace.json` to reference the new skill
 
 ### Versioning
 - **IMPORTANT**: Increment version numbers in BOTH root `marketplace.json` and per-skill `plugin.json` before committing changes
-- Root `marketplace.json` version should be incremented when publishing updates
+- Root `marketplace.json` version should be incremented when publishing any updates
 - Individual skill versions in `plugin.json` can vary independently
 
 ### File Format Conventions
-- **Frontmatter** (YAML) in SKILL.md defines triggers and tool permissions
+- **Frontmatter** (YAML) in `SKILL.md` defines triggers and tool permissions
 - **Agent files** use frontmatter with `name`, `description`, `model: inherit`
 - **Command files** are pure markdown with usage documentation and embedded prompts
+- **Reference files** are markdown documentation (no frontmatter needed)
+
+### Command Prefix Convention
+Command prefixes match the skill directory name: `/vanilla-rails:*`, `/rails-deps:*`. Do NOT use shortened prefixes like `/vanilla:*`.
