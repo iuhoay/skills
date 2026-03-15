@@ -36,7 +36,7 @@ skill-name/
         └── examples/            # Before/after code examples
 ```
 
-Some skills may omit `agents/` if they have no subagents, or include extra config files (e.g., `.lsp.json` for ruby-lsp).
+Some skills may omit `agents/` if they have no subagents, or include extra config files.
 
 ### Key Architecture Concepts
 
@@ -54,7 +54,7 @@ Some skills may omit `agents/` if they have no subagents, or include extra confi
 
 - **Plugin Name**: iuhoay-skills
 - **Categories**: productivity, utilities
-- **Version**: 1.8.0
+- **Version**: 1.9.0
 - **License**: MIT
 - **Owner**: iuhoay (https://github.com/iuhoay)
 
@@ -108,27 +108,6 @@ Configure and manage recommended Rails development dependencies for better devel
 - **letter_opener** - Preview emails in browser instead of sending
 
 **References:** Detailed setup docs in `references/` for each gem (strong_migrations.md, herb.md, bullet.md, letter_opener.md)
-
----
-
-### 3. Ruby LSP (`ruby-lsp/`)
-
-Ruby Language Server Protocol integration for code intelligence in editors.
-
-**Version:** 1.0.0
-
-**Configuration:** `.lsp.json` defines LSP server settings:
-```json
-{
-  "ruby": {
-    "command": "ruby-lsp",
-    "extensionToLanguage": {".rb": "ruby"},
-    "transport": "stdio"
-  }
-}
-```
-
-**Features:** Instant diagnostics, go-to-definition, find references, hover documentation, language-aware code navigation for Ruby/Rails projects.
 
 ---
 
