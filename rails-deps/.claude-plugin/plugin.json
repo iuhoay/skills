@@ -1,6 +1,6 @@
 {
   "name": "rails-deps",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Configure recommended Rails development dependencies for better developer experience and code quality.",
   "author": {
     "name": "iuhoay",
@@ -16,6 +16,9 @@
     "strong_migrations",
     "herb",
     "bullet",
-    "letter_opener"
+    "letter_opener",
+    "ruby-lsp",
+    "lsp",
+    "language-server"
   ]
 }

@@ -16,6 +16,7 @@ Guides you through configuring all recommended gems:
 2. **herb** - HTML+ERB parsing and tooling
 3. **bullet** - Detect N+1 queries
 4. **letter_opener** - Preview emails in browser
+5. **ruby-lsp** - Ruby Language Server Protocol for editor intelligence + Claude Code integration
 
 ## Process
 
@@ -52,7 +53,21 @@ The skill will:
 # Preview emails in browser
 # Install? (Y/n) Y
 
+# 5. ruby-lsp
+# Ruby Language Server Protocol — editor diagnostics, go-to-definition,
+# hover docs, and Claude Code integration via official plugin
+# Install gem? (Y/n) Y
+#
+# ✅ Added ruby-lsp gem to Gemfile (development group)
+# ✅ bundle install complete
+#
+# Next step — install the Claude Code plugin:
+#   /plugin install ruby-lsp@claude-plugins-official
+
 # === Summary ===
-# Installing: strong_migrations, herb, letter_opener
+# Installing: strong_migrations, herb, letter_opener, ruby-lsp
 # Skipping: bullet
+#
+# Reminder: run the following in Claude Code to enable ruby-lsp integration:
+#   /plugin install ruby-lsp@claude-plugins-official
 ```

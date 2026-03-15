@@ -16,6 +16,7 @@ Install and configure a specific recommended Rails development dependency.
 | `herb` | HTML+ERB tooling |
 | `bullet` | N+1 query detection |
 | `letter_opener` | Email preview |
+| `ruby-lsp` | Ruby Language Server Protocol |
 
 ## Examples
 
@@ -24,6 +25,7 @@ Install and configure a specific recommended Rails development dependency.
 /rails-deps:install herb
 /rails-deps:install bullet
 /rails-deps:install letter_opener
+/rails-deps:install ruby-lsp
 ```
 
 ## What This Does
@@ -32,3 +34,12 @@ Install and configure a specific recommended Rails development dependency.
 2. Runs `bundle install`
 3. Provides configuration instructions
 4. Runs necessary generators (e.g., `rails generate strong_migrations:install`)
+
+## Note on ruby-lsp
+
+`ruby-lsp` requires an additional step to enable Claude Code integration.
+After gem installation, run the following in Claude Code:
+
+```
+/plugin install ruby-lsp@claude-plugins-official
+```

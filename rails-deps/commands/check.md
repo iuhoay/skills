@@ -20,6 +20,7 @@ Check which recommended Rails development dependencies are installed in the curr
 - `herb` - HTML+ERB tooling
 - `bullet` - N+1 query detection
 - `letter_opener` - Email preview
+- `ruby-lsp` - Ruby Language Server Protocol
 
 ## Example Output
 
@@ -30,4 +31,7 @@ Check which recommended Rails development dependencies are installed in the curr
 ❌ herb - not found
 ✅ bullet - installed (v7.1.0)
 ⚠️  letter_opener - in Gemfile but not installed
+✅ ruby-lsp - installed (v0.23.0)
+   → To enable Claude Code integration:
+     /plugin install ruby-lsp@claude-plugins-official
 ```

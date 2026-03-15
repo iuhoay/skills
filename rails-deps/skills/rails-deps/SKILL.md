@@ -24,6 +24,7 @@ Run `/rails-deps:check` to see which recommended gems are installed in your proj
 | [herb](https://github.com/marcoroth/herb) | Tooling | HTML+ERB parsing, formatting, and linting |
 | [bullet](https://github.com/flyerhzm/bullet) | Performance | Detect N+1 queries |
 | [letter_opener](https://github.com/ryanb/letter_opener) | Development | Preview emails in browser |
+| [ruby-lsp](https://github.com/Shopify/ruby-lsp) | Tooling | Ruby LSP for editor intelligence + Claude Code integration |
 
 ## Commands
 
@@ -43,6 +44,7 @@ For detailed installation and configuration guides, see:
 | `herb` | [herb.md](references/herb.md) - HTML+ERB parsing and tooling |
 | `bullet` | [bullet.md](references/bullet.md) - N+1 query detection |
 | `letter_opener` | [letter_opener.md](references/letter_opener.md) - Email preview |
+| `ruby-lsp` | [ruby-lsp.md](references/ruby-lsp.md) - Ruby LSP setup and Claude Code plugin |
 
 ### Quick Install Commands
 
@@ -70,3 +72,4 @@ This skill activates when you mention:
 - "setup dependencies", "configure gems", "install strong_migrations"
 - "setup herb", "install bullet", "letter_opener"
 - "rails development gems", "project setup", "recommended gems"
+- "ruby-lsp", "language server", "lsp"
