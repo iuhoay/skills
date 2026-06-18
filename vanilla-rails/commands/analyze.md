@@ -1,4 +1,4 @@
-# /vanilla:analyze
+# /vanilla-rails:analyze
 
 Analyze a Rails codebase for over-engineering and opportunities to simplify toward Vanilla Rails.
 

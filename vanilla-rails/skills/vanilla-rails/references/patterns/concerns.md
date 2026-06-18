@@ -1,13 +1,18 @@
 # Concerns
 
-Concerns provide a way to share behavior across models while keeping code organized. Use them when multiple models need the same behavior.
+Concerns (`ActiveSupport::Concern` modules) serve two distinct purposes in Vanilla Rails:
+
+1. **Share behavior across models** — a capability several models need (e.g. `Readable`, `Searchable`), living in `app/models/concerns/`.
+2. **Organize one rich model** — decompose a large model into cohesive, namespaced behavioral units (e.g. `Card::Closeable`, `Card::Golden`), each owning its own associations, scopes, callbacks, and methods. These live under the model (`app/models/card/closeable.rb`).
+
+The second is the dominant Fizzy pattern: a `Card` that does a dozen things is composed from a dozen single-model concerns, not flattened into one giant class. A single-model concern is the *expected* home for organizing behavior — not a smell.
 
 ## When to Use
 
-- Shared behavior across multiple models
-- Extracting cohesive chunks of model logic
-- Organizing large models by functional area
-- Mixing in behavior that doesn't fit inheritance hierarchy
+- A capability shared across multiple models
+- A cohesive cluster of behavior on one model that owns its own associations/scopes/callbacks (namespaced under the model, e.g. `Card::Closeable`)
+- Organizing a large model by functional area
+- Mixing in behavior that doesn't fit an inheritance hierarchy
 
 ## The Fizzy Pattern
 
@@ -159,10 +164,10 @@ These don't organize by behavior—they just spread related code across files.
 
 ## When NOT to Use Concerns
 
-- Single model needs the behavior (put it in the model)
-- Behavior requires complex external dependencies
-- Sharing behavior between unrelated objects (use composition)
-- Just trying to reduce model line count
+- A trivial one-off method — put it directly in the model. Reach for a concern when the behavior is a cohesive *cluster* (associations + scopes + callbacks + methods), not a lone helper.
+- Code-slicing by artifact type (all validations, all scopes in one module) rather than by behavior — see the anti-pattern above.
+- Behavior that requires complex external dependencies (use a plain object or job instead).
+- Sharing behavior between unrelated objects (use composition/delegation, not a mixin).
 
 ## Official Guidance
 

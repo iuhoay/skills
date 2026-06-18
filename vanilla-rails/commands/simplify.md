@@ -1,4 +1,4 @@
-# /vanilla:simplify
+# /vanilla-rails:simplify
 
 Plan incremental simplification of a Rails codebase toward Vanilla Rails philosophy.
 

@@ -303,9 +303,8 @@ end
 ```
 
 **Changes:**
-- Business logic moved to model callbacks
-- Controller just calls Active Record methods
-- Uses `with_defaults` for smart defaults
+- Business logic moved to model callbacks (`before_save`, `before_create`)
+- Controller just calls Active Record methods (`draft_new_card_in`, association `create!`)
 - Proper response handling (HTML/JSON/TurboStream)
 
 ---
@@ -374,6 +373,6 @@ end
 3. **Controllers are thin** - Call Active Record directly: `@card.update!(card_params)`
 4. **Side effects via concerns** - `Eventable`, `Broadcastable`, `Mentions` handle their domain
 5. **Callbacks for internal state** - `before_save :set_default_title`, `before_create :assign_number`
-6. **Smart defaults with `with_defaults`** - `Board.create!(params.with_defaults(all_access: true))`
+6. **Transactions for atomic state changes** - wrap multi-step state mutations (`close`, `postpone`) in `transaction do`
 
 > "Vanilla Rails is plenty." - DHH

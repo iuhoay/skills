@@ -1,4 +1,4 @@
-# /vanilla:review
+# /vanilla-rails:review
 
 Code review from Vanilla Rails philosophy perspective.
 

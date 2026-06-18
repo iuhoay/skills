@@ -184,5 +184,5 @@ Location: `file:line`
 This reviewer integrates with compound-engineering workflows:
 
 - Invoked during `/review` as part of review agent pool
-- Can be run standalone via `/vanilla:review`
+- Can be run standalone via `/vanilla-rails:review`
 - Provides Vanilla Rails perspective alongside other reviewers

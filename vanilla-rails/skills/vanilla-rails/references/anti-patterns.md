@@ -6,7 +6,7 @@ Common anti-patterns that violate Vanilla Rails principles.
 
 This reference is informed by [Fizzy](https://github.com/basecamp/fizzy) - a production Rails application from 37signals. Fizzy avoids all these anti-patterns by embracing Vanilla Rails.
 
-**Key Fizzly patterns:**
+**Key Fizzy patterns:**
 - Controllers are thin: `@board.update!(board_params)`
 - Models are rich: `@card.close`, `@card.gild`, `@card.postpone`
 - No `app/services/` directory
