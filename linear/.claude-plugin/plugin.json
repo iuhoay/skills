@@ -1,6 +1,6 @@
 {
   "name": "linear",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Manage Linear issues through a secure JSON-first CLI without MCP.",
   "author": {
     "name": "iuhoay",

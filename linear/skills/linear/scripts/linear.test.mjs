@@ -393,3 +393,13 @@ test("fails clearly when credentials are missing", async () => {
   assert.equal(code, 1);
   assert.match(stderr, /credentials are not configured/);
 });
+
+test("includes the underlying network error when Linear cannot be reached", async () => {
+  const port = await availablePort();
+  const result = await run(["viewer"], {
+    LINEAR_API_URL: `http://127.0.0.1:${port}/graphql`,
+  });
+
+  assert.equal(result.code, 1);
+  assert.match(result.stderr, /Cannot reach Linear: fetch failed \(ECONNREFUSED:/);
+});

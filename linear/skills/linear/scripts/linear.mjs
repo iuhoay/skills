@@ -46,6 +46,13 @@ class CliError extends Error {
   }
 }
 
+function networkErrorMessage(error) {
+  const cause = error.cause;
+  if (!cause) return error.message;
+  const code = cause.code ? `${cause.code}: ` : "";
+  return `${error.message} (${code}${cause.message})`;
+}
+
 function parseArgs(argv) {
   const positionals = [];
   const options = {};
@@ -218,7 +225,7 @@ async function oauthTokenRequest(parameters) {
       body: new URLSearchParams(parameters),
     });
   } catch (error) {
-    throw new CliError(`Cannot reach Linear OAuth: ${error.message}`);
+    throw new CliError(`Cannot reach Linear OAuth: ${networkErrorMessage(error)}`);
   }
 
   const text = await response.text();
@@ -488,7 +495,7 @@ async function graphql(query, variables = {}) {
       body: JSON.stringify({ query, variables }),
     });
   } catch (error) {
-    throw new CliError(`Cannot reach Linear: ${error.message}`);
+    throw new CliError(`Cannot reach Linear: ${networkErrorMessage(error)}`);
   }
 
   const text = await response.text();
