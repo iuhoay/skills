@@ -10,13 +10,23 @@ Use the bundled CLI instead of MCP. It calls Linear's GraphQL API directly and p
 
 ## CLI
 
-The CLI is at `scripts/linear.mjs`, relative to this `SKILL.md`. Resolve that path from the loaded skill directory and invoke it with Node:
+Before the first Linear operation in a session, check whether the installed CLI is available:
+
+```bash
+command -v linear
+```
+
+If found, prefer it for all operations:
+
+```bash
+linear <command>
+```
+
+Otherwise, fall back to the bundled CLI at `scripts/linear.mjs`, relative to this `SKILL.md`. Resolve that path from the loaded skill directory and invoke it with Node:
 
 ```bash
 node /absolute/path/to/this/skill/scripts/linear.mjs <command>
 ```
-
-If the user has installed the symlink, `linear <command>` is equivalent. Never assume the symlink exists; fall back to the bundled script.
 
 The CLI detects the Git `origin` and applies defaults from the local, untracked `~/.config/linear-cli/repository-mappings.json`. Inspect them with `linear context`, configure the current repository with `linear context set --team ENG --project Platform`, and remove them with `linear context unset`. Explicit flags always override local defaults. Never commit this machine-specific mapping file.
 
