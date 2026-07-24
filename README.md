@@ -1,6 +1,6 @@
 # iuhoay/skills
 
-A collection of development workflow skills for [Pi](https://pi.dev) and [Claude Code](https://docs.anthropic.com/en/docs/claude-code).
+A collection of development workflow skills for [Amp](https://ampcode.com), [Pi](https://pi.dev), and [Claude Code](https://docs.anthropic.com/en/docs/claude-code).
 
 ## Available Skills
 
@@ -46,6 +46,16 @@ linear issues list --team ENG
 ```
 
 ## Installation
+
+### Amp
+
+Install all compatible skills at user scope with the GitHub CLI:
+
+```bash
+gh skill install iuhoay/skills --all --agent amp --scope user
+```
+
+Then start a new Amp session and use `skill: list` from the command palette to verify that `vanilla-rails`, `rails-deps`, and `linear` are available. The Ruby LSP plugin remains Claude Code-only because Amp does not load its `.lsp.json` configuration.
 
 ### Claude Code
 
