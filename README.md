@@ -31,12 +31,29 @@ gem install ruby-lsp
 
 ## Installation
 
-```
+### Claude Code
+
+```text
 /plugin marketplace add iuhoay/skills
 /plugin install vanilla-rails@iuhoay-skills
 /plugin install rails-deps@iuhoay-skills
 /plugin install ruby-lsp@iuhoay-skills
 ```
+
+### Pi
+
+Install the repository as a native [Pi package](https://pi.dev/docs/latest/packages):
+
+```bash
+pi install git:github.com/iuhoay/skills
+```
+
+Then start a new Pi session, or run `/reload` in the current session. The package provides:
+
+- `/skill:vanilla-rails`
+- `/skill:rails-deps`
+
+The Ruby LSP plugin is currently available only in Claude Code; Pi does not load its `.lsp.json` configuration.
 
 ## License
 

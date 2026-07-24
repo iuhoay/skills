@@ -1,0 +1,27 @@
+{
+  "name": "iuhoay-skills",
+  "version": "1.8.0",
+  "description": "Rails development and code review skills for Pi and Claude Code.",
+  "license": "MIT",
+  "author": {
+    "name": "iuhoay",
+    "url": "https://github.com/iuhoay"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iuhoay/skills.git"
+  },
+  "keywords": [
+    "pi-package",
+    "pi-coding-agent",
+    "agent-skills",
+    "rails",
+    "ruby"
+  ],
+  "pi": {
+    "skills": [
+      "./vanilla-rails/skills/vanilla-rails",
+      "./rails-deps/skills/rails-deps"
+    ]
+  }
+}
