@@ -1,0 +1,18 @@
+{
+  "name": "linear",
+  "version": "1.0.0",
+  "description": "Manage Linear issues through a secure JSON-first CLI without MCP.",
+  "author": {
+    "name": "iuhoay",
+    "url": "https://github.com/iuhoay"
+  },
+  "repository": "https://github.com/iuhoay/skills",
+  "license": "MIT",
+  "keywords": [
+    "linear",
+    "issues",
+    "project-management",
+    "cli",
+    "graphql"
+  ]
+}

@@ -5,8 +5,8 @@
     "url": "https://github.com/iuhoay"
   },
   "metadata": {
-    "description": "A collection of Claude Code skills for Rails development and code review.",
-    "version": "1.8.0"
+    "description": "Development workflow skills for Rails, Linear, and code review.",
+    "version": "1.9.0"
   },
   "plugins": [
     {
@@ -44,6 +44,18 @@
       "homepage": "https://github.com/iuhoay/skills",
       "tags": ["ruby", "rails", "lsp", "ide", "autocomplete", "diagnostics", "formatting", "editor"],
       "source": "./ruby-lsp"
+    },
+    {
+      "name": "linear",
+      "description": "Manage Linear issues through a secure JSON-first CLI without MCP.",
+      "version": "1.0.0",
+      "author": {
+        "name": "iuhoay",
+        "url": "https://github.com/iuhoay"
+      },
+      "homepage": "https://github.com/iuhoay/skills",
+      "tags": ["linear", "issues", "project-management", "cli", "graphql"],
+      "source": "./linear"
     }
   ]
 }

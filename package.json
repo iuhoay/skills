@@ -1,7 +1,7 @@
 {
   "name": "iuhoay-skills",
-  "version": "1.8.0",
-  "description": "Rails development and code review skills for Pi and Claude Code.",
+  "version": "1.9.0",
+  "description": "Development workflow skills for Pi and Claude Code.",
   "license": "MIT",
   "author": {
     "name": "iuhoay",
@@ -11,17 +11,29 @@
     "type": "git",
     "url": "https://github.com/iuhoay/skills.git"
   },
+  "engines": {
+    "node": ">=20"
+  },
   "keywords": [
     "pi-package",
     "pi-coding-agent",
     "agent-skills",
     "rails",
-    "ruby"
+    "ruby",
+    "linear",
+    "project-management"
   ],
+  "bin": {
+    "linear": "./linear/skills/linear/scripts/linear.mjs"
+  },
+  "scripts": {
+    "test": "node --test linear/skills/linear/scripts/linear.test.mjs"
+  },
   "pi": {
     "skills": [
       "./vanilla-rails/skills/vanilla-rails",
-      "./rails-deps/skills/rails-deps"
+      "./rails-deps/skills/rails-deps",
+      "./linear/skills/linear"
     ]
   }
 }

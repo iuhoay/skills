@@ -54,7 +54,7 @@ Some skills may omit `agents/` if they have no subagents, or include extra confi
 
 - **Plugin Name**: iuhoay-skills
 - **Categories**: productivity, utilities
-- **Version**: 1.8.0
+- **Version**: 1.9.0
 - **License**: MIT
 - **Owner**: iuhoay (https://github.com/iuhoay)
 
@@ -129,6 +129,22 @@ Ruby Language Server Protocol integration for code intelligence in editors.
 ```
 
 **Features:** Instant diagnostics, go-to-definition, find references, hover documentation, language-aware code navigation for Ruby/Rails projects.
+
+---
+
+### 4. Linear (`linear/`)
+
+Manage Linear issues without MCP through a bundled JSON-first Node.js CLI.
+
+**Version:** 1.0.0
+
+**Command:** `/linear:setup`
+
+**Triggers:** Linear issue search/read/create/update, pull-request linking, comments, and project-management requests.
+
+**Allowed Tools:** Bash, Read
+
+**CLI:** `linear/skills/linear/scripts/linear.mjs` — direct GraphQL API access; OAuth 2.0 + PKCE is the default login, refreshable credentials live in macOS Keychain (or a mode-0600 config file), and `LINEAR_API_KEY` remains a fallback.
 
 ---
 

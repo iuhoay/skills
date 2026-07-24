@@ -1,6 +1,6 @@
 # iuhoay/skills
 
-A collection of [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skills for Rails development.
+A collection of development workflow skills for [Pi](https://pi.dev) and [Claude Code](https://docs.anthropic.com/en/docs/claude-code).
 
 ## Available Skills
 
@@ -29,6 +29,22 @@ LSP integration for Ruby/Rails development with instant diagnostics, code naviga
 gem install ruby-lsp
 ```
 
+### Linear
+
+Manage Linear issues without MCP through a bundled, JSON-first CLI that calls Linear's GraphQL API directly.
+
+**Skill:** `/skill:linear`
+
+**Claude command:** `/linear:setup`
+
+The CLI supports OAuth 2.0 + PKCE login with automatic token refresh, issue search/read/create/update, comments, and a raw GraphQL escape hatch. Credentials are stored in macOS Keychain or a mode-0600 config file; `LINEAR_API_KEY` remains an optional fallback.
+
+```bash
+node linear/skills/linear/scripts/linear.mjs install
+linear auth login
+linear issues list --team ENG
+```
+
 ## Installation
 
 ### Claude Code
@@ -38,6 +54,7 @@ gem install ruby-lsp
 /plugin install vanilla-rails@iuhoay-skills
 /plugin install rails-deps@iuhoay-skills
 /plugin install ruby-lsp@iuhoay-skills
+/plugin install linear@iuhoay-skills
 ```
 
 ### Pi
@@ -52,8 +69,9 @@ Then start a new Pi session, or run `/reload` in the current session. The packag
 
 - `/skill:vanilla-rails`
 - `/skill:rails-deps`
+- `/skill:linear`
 
-The Ruby LSP plugin is currently available only in Claude Code; Pi does not load its `.lsp.json` configuration.
+The Ruby LSP plugin is currently available only in Claude Code; Pi does not load its `.lsp.json` configuration. The Linear skill's bundled CLI works in both harnesses and requires Node.js 20 or newer.
 
 ## License
 
