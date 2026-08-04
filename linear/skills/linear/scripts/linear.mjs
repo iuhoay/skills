@@ -156,6 +156,18 @@ async function repositoryContext() {
   };
 }
 
+// Mapped projects for a team, normalized across the old single-`project` shape and
+// the newer `projects` array. An empty result means no mapping applies.
+function mappedProjectsFor(defaults, team) {
+  if (!defaults || defaults.team?.toLowerCase() !== team.key.toLowerCase()) return [];
+  const list = Array.isArray(defaults.projects) && defaults.projects.length
+    ? defaults.projects
+    : defaults.project
+      ? [defaults.project]
+      : [];
+  return list.filter(Boolean);
+}
+
 async function setRepositoryContext(options) {
   const repository = normalizeRepository(options.repository) || currentRepository();
   required(repository, "--repository or a Git origin");
@@ -164,7 +176,10 @@ async function setRepositoryContext(options) {
   mappings.repositories ||= {};
   mappings.repositories[repository] = {
     team: required(options.team, "--team"),
-    project: required(options.project, "--project"),
+    projects: required(options.project, "--project")
+      .split(",")
+      .map((project) => project.trim())
+      .filter(Boolean),
   };
   await writeRepositoryMappings(mappings);
   return repositoryContext();
@@ -733,10 +748,14 @@ async function createIssue(options) {
   if (options.assignee) input.assigneeId = (await resolveUser(options.assignee)).id;
   if (options.state) input.stateId = (await resolveState(options.state, team.id)).id;
   if (options.cycle) input.cycleId = (await resolveCycle(options.cycle, team.id)).id;
-  const mappedProject = context.defaults?.team?.toLowerCase() === team.key.toLowerCase()
-    ? context.defaults.project
-    : undefined;
-  const projectReference = options.project || mappedProject;
+  const mappedProjects = mappedProjectsFor(context.defaults, team);
+  let projectReference = options.project;
+  if (!projectReference && mappedProjects.length === 1) projectReference = mappedProjects[0];
+  if (!projectReference && mappedProjects.length > 1) {
+    throw new CliError(
+      `Repository ${context.repository} maps to multiple Linear projects (${mappedProjects.join(", ")}); pass --project explicitly`,
+    );
+  }
   if (projectReference) input.projectId = (await resolveProject(projectReference, team.id)).id;
   const labelIds = await resolveLabelIds(options.labels ?? options.label, "--labels");
   if (labelIds) input.labelIds = labelIds;

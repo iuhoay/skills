@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Development workflow skills for Rails, Linear, and code review.",
-    "version": "1.9.2"
+    "version": "1.9.3"
   },
   "plugins": [
     {
@@ -48,7 +48,7 @@
     {
       "name": "linear",
       "description": "Manage Linear issues through a secure JSON-first CLI without MCP.",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "author": {
         "name": "iuhoay",
         "url": "https://github.com/iuhoay"

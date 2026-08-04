@@ -30,6 +30,8 @@ node /absolute/path/to/this/skill/scripts/linear.mjs <command>
 
 The CLI detects the Git `origin` and applies defaults from the local, untracked `~/.config/linear-cli/repository-mappings.json`. Inspect them with `linear context`, configure the current repository with `linear context set --team ENG --project Platform`, and remove them with `linear context unset`. Explicit flags always override local defaults. Never commit this machine-specific mapping file.
 
+A repository may map to several Linear projects (for example `acme-corp/storefront` → `Storefront, Admin`): pass `--project "Storefront,Admin"` to `linear context set`, which stores a `projects` array (the legacy single `project` string is still read for older entries). When a repository maps to multiple projects, `linear issues create` **fails with a clear error unless `--project` is passed explicitly** — it never silently picks one, because issues landing in the wrong project are worse than an extra flag.
+
 ## Authentication
 
 Check authentication before the first Linear operation in a session:
@@ -110,7 +112,7 @@ Before creating an issue:
 
 1. Search for an existing issue with relevant keywords.
 2. Resolve the team instead of guessing its UUID; use the repository's configured team key when one is available.
-3. Resolve and assign the owning project (for example `Web`) with `--project`; do not leave project-scoped repository work unassigned.
+3. Resolve and assign the owning project (for example `Storefront`) with `--project`; do not leave project-scoped repository work unassigned.
 4. When the team uses cycles, assign active implementation work with `--cycle current` unless the user names a different cycle.
 5. Add the appropriate team label (for example `Bug`, `Feature`, or `Improvement`) rather than leaving the issue unlabeled.
 6. Keep the title imperative and concise.
