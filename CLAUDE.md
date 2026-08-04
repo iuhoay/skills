@@ -54,7 +54,7 @@ Some skills may omit `agents/` if they have no subagents, or include extra confi
 
 - **Plugin Name**: iuhoay-skills
 - **Categories**: productivity, utilities
-- **Version**: 1.9.0
+- **Version**: 1.10.0
 - **License**: MIT
 - **Owner**: iuhoay (https://github.com/iuhoay)
 
@@ -145,6 +145,23 @@ Manage Linear issues without MCP through a bundled JSON-first Node.js CLI.
 **Allowed Tools:** Bash, Read
 
 **CLI:** `linear/skills/linear/scripts/linear.mjs` — direct GraphQL API access; OAuth 2.0 + PKCE is the default login, refreshable credentials live in macOS Keychain (or a mode-0600 config file), and `LINEAR_API_KEY` remains a fallback.
+
+### 5. Question It (`question-it/`)
+
+Automatically challenge the user's plans and decision-laden questions — question the question itself, verify against facts, and give a better alternative.
+
+**Version:** 1.2.0
+
+**Commands:**
+- `/question-it:interview [plan]` - Full decision-tree interview (manual deep-dive)
+
+**Auto-triggers:** When the user proposes a plan or approach, asks a "should I / how should I" or "is this ok" question, or seeks confirmation — pure fact queries do not trigger.
+
+**Philosophy:** Every question carries hidden assumptions — question the question first. Every challenge must cite facts from the environment (code, git history, configs); no hollow "have you considered X". Every challenge comes with a better alternative and its cost. One point at a time, facts are arguable but preferences are the user's. Nothing is acted on without confirmation.
+
+**Allowed Tools:** Grep, Glob, Read, Bash
+
+**Key structure:** The `question-it` skill (auto-invoked primitive) carries the challenge technique; the `/question-it:interview` command is the manual decision-tree interview. Adapted from the [grill-me/grilling split](https://github.com/mattpocock/skills) in mattpocock's skills collection.
 
 ---
 

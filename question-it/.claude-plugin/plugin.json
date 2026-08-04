@@ -1,0 +1,19 @@
+{
+  "name": "question-it",
+  "version": "1.2.0",
+  "description": "Automatically challenge the user's plans and decision-laden questions — question the question, verify against facts from the codebase, and give a better alternative. Manual /question-it:interview command runs a full decision-tree interview.",
+  "author": {
+    "name": "iuhoay",
+    "url": "https://github.com/iuhoay"
+  },
+  "repository": "https://github.com/iuhoay/skills",
+  "license": "MIT",
+  "keywords": [
+    "productivity",
+    "planning",
+    "interview",
+    "decision-tree",
+    "stress-test",
+    "design"
+  ]
+}

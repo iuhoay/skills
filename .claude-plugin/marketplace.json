@@ -5,8 +5,8 @@
     "url": "https://github.com/iuhoay"
   },
   "metadata": {
-    "description": "Development workflow skills for Rails, Linear, and code review.",
-    "version": "1.9.3"
+    "description": "Development workflow skills for Rails, Linear, code review, and planning.",
+    "version": "1.10.0"
   },
   "plugins": [
     {
@@ -44,6 +44,18 @@
       "homepage": "https://github.com/iuhoay/skills",
       "tags": ["ruby", "rails", "lsp", "ide", "autocomplete", "diagnostics", "formatting", "editor"],
       "source": "./ruby-lsp"
+    },
+    {
+      "name": "question-it",
+      "description": "Automatically challenge the user's plans and decision-laden questions — question the question itself, verify against facts from the codebase, and give a better alternative. Manual /question-it:interview runs a full decision-tree interview.",
+      "version": "1.2.0",
+      "author": {
+        "name": "iuhoay",
+        "url": "https://github.com/iuhoay"
+      },
+      "homepage": "https://github.com/iuhoay/skills",
+      "tags": ["productivity", "planning", "interview", "decision-tree", "stress-test", "design"],
+      "source": "./question-it"
     },
     {
       "name": "linear",

@@ -32,6 +32,16 @@ Manage Linear issues without MCP through a bundled, JSON-first CLI that calls Li
 
 The CLI supports OAuth 2.0 + PKCE login with automatic token refresh, issue search/read/create/update, comments, and a raw GraphQL escape hatch. Credentials are stored in macOS Keychain or a mode-0600 config file; `LINEAR_API_KEY` remains an optional fallback.
 
+### Question It
+
+Automatically challenges your plans and decision-laden questions — question the question, verify against facts from the codebase, and give a better alternative.
+
+**Agent skill:** `question-it` (auto-triggered)
+
+**Claude Code commands:** `/question-it:interview [plan]` — manual decision-tree interview
+
+Every question carries hidden assumptions, so it questions the question first. Every challenge is grounded in facts from the environment (code, git history, configs) — never hollow "have you considered X" — and comes with a concrete better alternative and its cost. One point at a time; nothing is acted on without your confirmation. Adapted from [mattpocock/skills](https://github.com/mattpocock/skills).
+
 ## Installation
 
 ### Agent Skills
@@ -47,7 +57,7 @@ gh skill install iuhoay/skills --all --agent codex --scope user
 
 Replace `--agent` with the desired host. To install one skill instead of all of them, replace `--all` with its name, such as `linear`.
 
-This installs `vanilla-rails`, `rails-deps`, and `linear` using the cross-agent [Agent Skills specification](https://agentskills.io/specification). It does not install Claude Code-specific slash commands, subagents, plugin manifests, or `.lsp.json` configuration. The `gh skill` command is currently a preview feature.
+This installs `vanilla-rails`, `rails-deps`, `question-it`, and `linear` using the cross-agent [Agent Skills specification](https://agentskills.io/specification). It does not install Claude Code-specific slash commands, subagents, plugin manifests, or `.lsp.json` configuration. The `gh skill` command is currently a preview feature.
 
 After installing for Amp, start a new session and use `skill: list` from the command palette to verify the skills are available.
 
@@ -61,6 +71,7 @@ For the complete Claude Code integration, including slash commands, subagents, a
 /plugin install rails-deps@iuhoay-skills
 /plugin install ruby-lsp@iuhoay-skills
 /plugin install linear@iuhoay-skills
+/plugin install question-it@iuhoay-skills
 ```
 
 ### Pi Package
@@ -76,6 +87,7 @@ Then start a new Pi session, or run `/reload` in the current session. The packag
 - `/skill:vanilla-rails`
 - `/skill:rails-deps`
 - `/skill:linear`
+- `/skill:question-it`
 
 ## Platform-specific Integrations
 
