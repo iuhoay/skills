@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Development workflow skills for Rails, Linear, code review, and planning.",
-    "version": "1.10.0"
+    "version": "1.11.0"
   },
   "plugins": [
     {
@@ -68,6 +68,18 @@
       "homepage": "https://github.com/iuhoay/skills",
       "tags": ["linear", "issues", "project-management", "cli", "graphql"],
       "source": "./linear"
+    },
+    {
+      "name": "gh-stack",
+      "description": "Manage GitHub stacked pull requests with the official gh stack extension.",
+      "version": "1.0.0",
+      "author": {
+        "name": "iuhoay",
+        "url": "https://github.com/iuhoay"
+      },
+      "homepage": "https://github.com/iuhoay/skills",
+      "tags": ["github", "stacked-prs", "pull-requests", "gh-stack", "git", "workflow"],
+      "source": "./gh-stack"
     }
   ]
 }

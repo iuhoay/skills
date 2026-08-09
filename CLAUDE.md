@@ -54,7 +54,7 @@ Some skills may omit `agents/` if they have no subagents, or include extra confi
 
 - **Plugin Name**: iuhoay-skills
 - **Categories**: productivity, utilities
-- **Version**: 1.10.0
+- **Version**: 1.11.0
 - **License**: MIT
 - **Owner**: iuhoay (https://github.com/iuhoay)
 
@@ -162,6 +162,25 @@ Automatically challenge the user's plans and decision-laden questions — questi
 **Allowed Tools:** Grep, Glob, Read, Bash
 
 **Key structure:** The `question-it` skill (auto-invoked primitive) carries the challenge technique; the `/question-it:interview` command is the manual decision-tree interview. Adapted from the [grill-me/grilling split](https://github.com/mattpocock/skills) in mattpocock's skills collection.
+
+---
+
+### 6. GitHub Stacked PRs (`gh-stack/`)
+
+Manage GitHub stacked pull requests with the official `gh stack` extension — break a large change into a chain of dependent PRs.
+
+**Version:** 1.0.0
+
+**Commands:**
+- `/gh-stack:setup` - Install and verify the gh-stack extension
+
+**Triggers:** "stacked PR", "PR stack", "stack of branches", "stack these branches", "gh stack", splitting a large change into dependent pull requests.
+
+**Workflow:** `init`/`add` to build the stack, `submit` to create the PR chain (agent-safe with `--auto`), `sync` to rebase/push/sync PR state, `rebase`/`modify` to restructure, `bottom`/`top`/`up`/`down`/`trunk` to navigate, `link` for stacks managed by external tools (jj, Sapling, git-town) without local tracking.
+
+**Agent notes:** `submit` opens an interactive editor in a terminal — pass `--auto` non-interactively (PRs become drafts unless `--open`). `sync` never opens PRs, only links existing ones. `modify`/`switch` are interactive TUIs. `view --json` gives machine-readable state. Metadata lives in `.git/gh-stack` (JSON, uncommitted).
+
+**Allowed Tools:** Bash, Read, Grep
 
 ---
 
