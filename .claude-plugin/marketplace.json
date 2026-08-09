@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Development workflow skills for Rails, Linear, code review, and planning.",
-    "version": "1.11.0"
+    "version": "1.12.0"
   },
   "plugins": [
     {
@@ -72,7 +72,7 @@
     {
       "name": "gh-stack",
       "description": "Manage GitHub stacked pull requests with the official gh stack extension.",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": {
         "name": "iuhoay",
         "url": "https://github.com/iuhoay"
