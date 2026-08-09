@@ -1,0 +1,19 @@
+{
+  "name": "gh-stack",
+  "version": "1.0.0",
+  "description": "Manage GitHub stacked pull requests with the official gh stack extension.",
+  "author": {
+    "name": "iuhoay",
+    "url": "https://github.com/iuhoay"
+  },
+  "repository": "https://github.com/iuhoay/skills",
+  "license": "MIT",
+  "keywords": [
+    "github",
+    "stacked-prs",
+    "pull-requests",
+    "gh-stack",
+    "git",
+    "workflow"
+  ]
+}

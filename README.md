@@ -42,6 +42,16 @@ Automatically challenges your plans and decision-laden questions — question th
 
 Every question carries hidden assumptions, so it questions the question first. Every challenge is grounded in facts from the environment (code, git history, configs) — never hollow "have you considered X" — and comes with a concrete better alternative and its cost. One point at a time; nothing is acted on without your confirmation. Adapted from [mattpocock/skills](https://github.com/mattpocock/skills).
 
+### GitHub Stacked PRs
+
+Manage stacked pull requests with the official `gh stack` extension — split a large change into a chain of dependent PRs.
+
+**Agent skill:** `gh-stack`
+
+**Claude Code commands:** `/gh-stack:setup` — install and verify the extension
+
+Create stacks (`init`/`add`), submit PR chains (`submit`), keep them in sync (`sync`), cascade-rebase, restructure interactively (`modify`), and navigate (`bottom`/`top`/`up`/`down`/`trunk`). Agent-friendly details: `submit --auto` skips the interactive editor, `view --json` gives machine-readable state, and `link` works without local tracking for external tools like jj or Sapling.
+
 ## Installation
 
 ### Agent Skills
@@ -57,7 +67,7 @@ gh skill install iuhoay/skills --all --agent codex --scope user
 
 Replace `--agent` with the desired host. To install one skill instead of all of them, replace `--all` with its name, such as `linear`.
 
-This installs `vanilla-rails`, `rails-deps`, `question-it`, and `linear` using the cross-agent [Agent Skills specification](https://agentskills.io/specification). It does not install Claude Code-specific slash commands, subagents, plugin manifests, or `.lsp.json` configuration. The `gh skill` command is currently a preview feature.
+This installs `vanilla-rails`, `rails-deps`, `question-it`, `linear`, and `gh-stack` using the cross-agent [Agent Skills specification](https://agentskills.io/specification). It does not install Claude Code-specific slash commands, subagents, plugin manifests, or `.lsp.json` configuration. The `gh skill` command is currently a preview feature.
 
 After installing for Amp, start a new session and use `skill: list` from the command palette to verify the skills are available.
 
@@ -72,6 +82,7 @@ For the complete Claude Code integration, including slash commands, subagents, a
 /plugin install ruby-lsp@iuhoay-skills
 /plugin install linear@iuhoay-skills
 /plugin install question-it@iuhoay-skills
+/plugin install gh-stack@iuhoay-skills
 ```
 
 ### Pi Package
@@ -88,6 +99,7 @@ Then start a new Pi session, or run `/reload` in the current session. The packag
 - `/skill:rails-deps`
 - `/skill:linear`
 - `/skill:question-it`
+- `/skill:gh-stack`
 
 ## Platform-specific Integrations
 
