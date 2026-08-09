@@ -2,6 +2,8 @@
 
 A collection of development workflow skills for [Amp](https://ampcode.com), [Pi](https://pi.dev), and [Claude Code](https://docs.anthropic.com/en/docs/claude-code).
 
+[![skills.sh](https://skills.sh/b/iuhoay/skills)](https://skills.sh/iuhoay/skills)
+
 ## Available Skills
 
 ### Vanilla Rails
@@ -53,6 +55,20 @@ Manage stacked pull requests with the official `gh stack` extension — split a 
 Create stacks (`init`/`add`), submit PR chains (`submit`), keep them in sync (`sync`), cascade-rebase, restructure interactively (`modify`), and navigate (`bottom`/`top`/`up`/`down`/`trunk`). Agent-friendly details: `submit --auto` skips the interactive editor, `view --json` gives machine-readable state, and `link` works without local tracking for external tools like jj or Sapling.
 
 ## Installation
+
+### skills CLI (skills.sh)
+
+Install via the [skills CLI](https://github.com/vercel-labs/skills) from the [skills.sh](https://skills.sh/iuhoay/skills) directory — no GitHub CLI preview feature required:
+
+```bash
+# Install all skills (interactive — auto-detects your installed agents)
+npx skills add iuhoay/skills
+
+# Install one skill
+npx skills add iuhoay/skills --skill linear
+```
+
+Run `npx skills list` to verify. This installs `vanilla-rails`, `rails-deps`, `question-it`, `linear`, and `gh-stack` using the cross-agent [Agent Skills specification](https://agentskills.io/specification). It does not install Claude Code-specific slash commands, subagents, plugin manifests, or `.lsp.json` configuration — use the Claude Code Plugin section below for those.
 
 ### Agent Skills
 
