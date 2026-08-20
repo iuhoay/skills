@@ -52,7 +52,7 @@ Manage stacked pull requests with the official `gh stack` extension — split a 
 
 **Claude Code commands:** `/gh-stack:setup` — install and verify the extension
 
-Create stacks (`init`/`add`), submit PR chains (`submit`), keep them in sync (`sync`), cascade-rebase, restructure interactively (`modify`), and navigate (`bottom`/`top`/`up`/`down`/`trunk`). Agent-friendly details: `submit --auto` skips the interactive editor, `view --json` gives machine-readable state, and `link` works without local tracking for external tools like jj or Sapling.
+Create stacks (`init`/`add`), submit PR chains (`submit`), keep them in sync (`sync`), land them (`merge`), and navigate (`bottom`/`top`/`up`/`down`/`trunk`). Agent-friendly details: `submit --auto` skips the interactive editor, `view --json` gives machine-readable state, exit codes 0-10 drive recovery, and `link` works without local tracking for external tools like jj or Sapling. Ships references on layer design, per-command behavior, and troubleshooting.
 
 ## Installation
 
