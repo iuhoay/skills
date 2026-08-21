@@ -185,6 +185,23 @@ Manage GitHub stacked pull requests with the official `gh stack` extension — b
 
 **Agent notes:** `submit` opens an interactive editor in a terminal — pass `--auto` non-interactively (PRs become drafts unless `--open`). `sync` never opens PRs, only links existing ones. `modify`/`switch` are interactive TUIs. `view --json` gives machine-readable state; branch on exit codes (0-10), not stderr text. Metadata lives in `.git/gh-stack` (JSON, uncommitted).
 
+---
+
+### 7. Herdr Subagents (`herdr-subagents/`)
+
+Spawn and coordinate subagents as real herdr panes — visible, detachable, state-tracked delegation via the `herdr` CLI.
+
+**Version:** 1.0.0
+
+**Commands:**
+- `/herdr-subagents:spawn <task>` - Split a sibling pane, start a pi subagent, submit the task, collect the result
+
+**Triggers:** "subagent", "spawn an agent", "delegate to", "parallel agents", "use herdr panes", visible/detachable agent workers.
+
+**Workflow:** `agent start --kind pi` in a split pane → `agent prompt --wait` → `agent read recent-unwrapped` → `pane close`. Fire-and-forget via the callback bridge: subagents write `~/.pi/agent/callbacks/*.done`, the `herdr-callbacks.ts` extension injects them into the session.
+
+**Pi-oriented:** deliberately has NO `.claude-plugin/plugin.json` and is not in the marketplace — the orchestration is agent-agnostic, but the callback extension runs on pi's extension API. Requires `HERDR_ENV=1`.
+
 **Allowed Tools:** Bash, Read, Grep
 
 ---
@@ -195,7 +212,7 @@ When modifying this repository:
 
 ### Adding a New Skill
 1. Create skill directory with `agents/`, `commands/`, `skills/` subdirectories
-2. Add `.claude-plugin/plugin.json` with skill metadata (name, version, keywords, author)
+2. Add `.claude-plugin/plugin.json` with skill metadata (name, version, keywords, author) — **skip this for pi-only skills** (like `herdr-subagents`): they are excluded from `marketplace.json` and reach pi through the `pi.skills` allowlist in `package.json` instead
 3. Create `skills/skill-name/SKILL.md` with triggers, description, allowed tools (YAML frontmatter)
 4. Create command markdown files in `commands/`
 5. Create agent markdown files in `agents/` (if needed; use `model: inherit`)

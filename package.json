@@ -1,6 +1,6 @@
 {
   "name": "iuhoay-skills",
-  "version": "1.11.0",
+  "version": "1.12.0",
   "description": "Development workflow skills for Pi and Claude Code.",
   "license": "MIT",
   "author": {
@@ -22,7 +22,9 @@
     "ruby",
     "linear",
     "project-management",
-    "stacked-prs"
+    "stacked-prs",
+    "herdr",
+    "subagents"
   ],
   "bin": {
     "linear": "./linear/skills/linear/scripts/linear.mjs"
@@ -36,7 +38,8 @@
       "./rails-deps/skills/rails-deps",
       "./linear/skills/linear",
       "./question-it/skills/question-it",
-      "./gh-stack/skills/gh-stack"
+      "./gh-stack/skills/gh-stack",
+      "./herdr-subagents/skills/herdr-subagents"
     ]
   }
 }

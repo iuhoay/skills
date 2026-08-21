@@ -54,6 +54,20 @@ Manage stacked pull requests with the official `gh stack` extension — split a 
 
 Create stacks (`init`/`add`), submit PR chains (`submit`), keep them in sync (`sync`), land them (`merge`), and navigate (`bottom`/`top`/`up`/`down`/`trunk`). Agent-friendly details: `submit --auto` skips the interactive editor, `view --json` gives machine-readable state, exit codes 0-10 drive recovery, and `link` works without local tracking for external tools like jj or Sapling. Ships references on layer design, per-command behavior, and troubleshooting.
 
+### Herdr Subagents
+
+Spawn and coordinate subagents as **real herdr panes** — visible, detachable, state-tracked delegation. Each subagent is a separate `pi` process in its own pane, orchestrated through the `herdr` CLI.
+
+**Agent skill:** `herdr-subagents`
+
+**Pi command:** `/herdr-subagents:spawn <task>` (ships via the Pi Package path) — split a sibling pane, start a pi subagent, submit the task, collect the result
+
+Pi-oriented: the skill has no Claude Code plugin manifest and is not published to the marketplace — the orchestration works from any agent, but the callback bridge extension (`herdr-callbacks.ts`) runs on pi's extension API.
+
+Requires [herdr](https://herdr.dev) with the agent running inside a herdr-managed pane (`HERDR_ENV=1`). Supports single, parallel, and chained subagent workflows; the guardrail prevents using the skill outside herdr.
+
+**Fire-and-forget callbacks:** the skill ships a pi extension (`herdr-subagents/skills/herdr-subagents/extensions/herdr-callbacks.ts`) that watches `~/.pi/agent/callbacks/` and injects subagent completion files into the parent session via `sendUserMessage` — delegate long work (CI watching, waits) without blocking, and get woken when it lands. Copy the extension to `~/.pi/agent/extensions/` and `/reload` in pi.
+
 ## Installation
 
 ### skills CLI (skills.sh)
@@ -68,7 +82,7 @@ npx skills add iuhoay/skills
 npx skills add iuhoay/skills --skill linear
 ```
 
-Run `npx skills list` to verify. This installs `vanilla-rails`, `rails-deps`, `question-it`, `linear`, and `gh-stack` using the cross-agent [Agent Skills specification](https://agentskills.io/specification). It does not install Claude Code-specific slash commands, subagents, plugin manifests, or `.lsp.json` configuration — use the Claude Code Plugin section below for those.
+Run `npx skills list` to verify. This installs `vanilla-rails`, `rails-deps`, `question-it`, `linear`, `gh-stack`, and `herdr-subagents` using the cross-agent [Agent Skills specification](https://agentskills.io/specification). It does not install Claude Code-specific slash commands, subagents, plugin manifests, or `.lsp.json` configuration — use the Claude Code Plugin section below for those.
 
 ### Agent Skills
 
@@ -83,7 +97,7 @@ gh skill install iuhoay/skills --all --agent codex --scope user
 
 Replace `--agent` with the desired host. To install one skill instead of all of them, replace `--all` with its name, such as `linear`.
 
-This installs `vanilla-rails`, `rails-deps`, `question-it`, `linear`, and `gh-stack` using the cross-agent [Agent Skills specification](https://agentskills.io/specification). It does not install Claude Code-specific slash commands, subagents, plugin manifests, or `.lsp.json` configuration. The `gh skill` command is currently a preview feature.
+This installs `vanilla-rails`, `rails-deps`, `question-it`, `linear`, `gh-stack`, and `herdr-subagents` using the cross-agent [Agent Skills specification](https://agentskills.io/specification). It does not install Claude Code-specific slash commands, subagents, plugin manifests, or `.lsp.json` configuration. The `gh skill` command is currently a preview feature.
 
 After installing for Amp, start a new session and use `skill: list` from the command palette to verify the skills are available.
 
@@ -100,6 +114,8 @@ For the complete Claude Code integration, including slash commands, subagents, a
 /plugin install question-it@iuhoay-skills
 /plugin install gh-stack@iuhoay-skills
 ```
+
+`herdr-subagents` is deliberately absent from the marketplace: it is a pi-oriented skill (its callback bridge extension runs on pi's extension API), so it ships through the skills CLI / Pi Package paths only.
 
 ### Pi Package
 
