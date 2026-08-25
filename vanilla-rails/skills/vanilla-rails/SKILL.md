@@ -1,6 +1,16 @@
 ---
 name: vanilla-rails
-description: Design and review Rails applications using Vanilla Rails philosophy from 37signals/Basecamp. Emphasizes thin controllers, rich domain models, and avoiding unnecessary service layers. Use when analyzing Rails codebases, reviewing PRs, or refactoring toward simpler architecture. Triggers on "service layer", "service object", "thin controller", "rich model", "vanilla rails", "dhh style", "over-engineering", "unnecessary abstraction".
+description: >
+  Apply Vanilla Rails (37signals/Basecamp) as the default architecture when
+  writing or changing Rails code: thin controllers, rich models, no
+  service/query/interactor layer unless genuinely justified. Load this skill
+  when creating or editing controllers, models, jobs, concerns, mailers,
+  routes, or form objects; when adding a custom action versus a nested
+  resource; when extracting a service, form, query, or interactor; or when
+  deciding where business logic lives. Also use for Rails reviews and
+  simplification. Do not wait for the user to say "vanilla rails" or
+  "service object". Skip migrations, gem/dependency bumps, CSS/JS/view-only
+  work, credentials, and non-Rails tasks.
 allowed-tools:
   - Grep
   - Glob
@@ -10,7 +20,7 @@ allowed-tools:
 
 # Vanilla Rails
 
-Design and review Rails applications using the Vanilla Rails philosophy from 37signals/Basecamp.
+Default architecture when writing Rails, from the Vanilla Rails philosophy of 37signals/Basecamp. Apply it while implementing — do not wait for a review command or for the user to name the philosophy.
 
 ## Based on Fizzy
 
@@ -47,12 +57,27 @@ Vanilla Rails embraces Rails's built-in patterns and avoids premature abstractio
 
 **Core Rule:** Don't add layers beyond what Rails provides unless you have a clear, justified reason.
 
-## What Would You Like To Do?
+## Default constraint
 
-1. **Review code changes** - Run `/vanilla-rails:review` for Vanilla Rails architecture review
-2. **Analyze codebase** - Run `/vanilla-rails:analyze` to identify over-engineering
-3. **Plan simplification** - Run `/vanilla-rails:simplify [goal]` to plan refactoring toward Vanilla Rails
-4. **Review PR/implementation** - I'll evaluate against Vanilla Rails principles
+This skill is the house style for Rails work, not an optional review lens. When loaded during implementation, apply the principles below while writing code. Do not ask which review command to run.
+
+**Do:**
+- Put domain logic on the model, or a namespaced concern of that model
+- Keep controllers to params + one model call
+- Prefer a new nested resource over a custom controller action
+- Keep jobs and mailers shallow: `_later` enqueues, `_now` does the work on the model
+
+**Do not introduce** `app/services/`, `app/queries/`, interactors, managers, or handlers unless the bar in [When Services Are Actually OK](#when-services-are-actually-ok) is met — and say so in the change.
+
+**Skip this overlay for** migrations, gem/dependency bumps, CSS/JS, view-only markup, credentials, and anything that is not Rails application code.
+
+## Explicit commands
+
+Use these only when the user asks to review, analyze, or plan a simplification — not as the default response to Rails implementation:
+
+1. **Review code changes** - `/vanilla-rails:review`
+2. **Analyze codebase** - `/vanilla-rails:analyze`
+3. **Plan simplification** - `/vanilla-rails:simplify [goal]`
 
 ## Core Principles
 

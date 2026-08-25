@@ -62,18 +62,18 @@ Some skills may omit `agents/` if they have no subagents, or include extra confi
 
 ### 1. Vanilla Rails (`vanilla-rails/`)
 
-Design and review Rails applications using Vanilla Rails philosophy from 37signals/Basecamp.
+Default architecture constraint when writing Rails, from Vanilla Rails / 37signals/Basecamp.
 
-**Version:** 1.6.3
+**Version:** 1.6.5
 
 **Commands:**
 - `/vanilla-rails:review` - Review code changes for over-engineering
 - `/vanilla-rails:analyze` - Analyze codebase for simplification opportunities
 - `/vanilla-rails:simplify [goal]` - Plan incremental simplification
 
-**Triggers:** "service layer", "service object", "thin controller", "rich model", "vanilla rails", "dhh style", "over-engineering", "unnecessary abstraction"
+**Triggers:** creating or editing controllers, models, jobs, concerns, mailers, routes, or form objects; custom action vs nested resource; extracting a service/form/query/interactor; deciding where business logic lives. Not migrations, gem bumps, CSS/JS, credentials.
 
-**Philosophy:** Thin controllers, rich domain models, no service layers unless genuinely justified.
+**Philosophy:** House style, not a review lens. Thin controllers, rich domain models, no service layers unless genuinely justified.
 
 **Allowed Tools:** Grep, Glob, Read, Task
 
@@ -213,7 +213,7 @@ When modifying this repository:
 ### Adding a New Skill
 1. Create skill directory with `agents/`, `commands/`, `skills/` subdirectories
 2. Add `.claude-plugin/plugin.json` with skill metadata (name, version, keywords, author) — **skip this for pi-only skills** (like `herdr-subagents`): they are excluded from `marketplace.json` and reach pi through the `pi.skills` allowlist in `package.json` instead
-3. Create `skills/skill-name/SKILL.md` with triggers, description, allowed tools (YAML frontmatter)
+3. Create `skills/skill-name/SKILL.md` with description (when to load), allowed tools (YAML frontmatter)
 4. Create command markdown files in `commands/`
 5. Create agent markdown files in `agents/` (if needed; use `model: inherit`)
 6. Update root `.claude-plugin/marketplace.json` to reference the new skill

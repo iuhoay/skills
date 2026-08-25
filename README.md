@@ -8,9 +8,9 @@ A collection of development workflow skills for [Amp](https://ampcode.com), [Pi]
 
 ### Vanilla Rails
 
-Design and review Rails applications using Vanilla Rails philosophy from 37signals/Basecamp.
+Default architecture when writing Rails, from Vanilla Rails / 37signals/Basecamp.
 
-**Agent skill:** `vanilla-rails`
+**Agent skill:** `vanilla-rails` (auto-loaded on Rails implementation)
 
 **Claude Code commands:** `/vanilla-rails:review` | `/vanilla-rails:analyze` | `/vanilla-rails:simplify [goal]`
 

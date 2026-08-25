@@ -6,13 +6,13 @@
   },
   "metadata": {
     "description": "Development workflow skills for Rails, Linear, code review, and planning.",
-    "version": "1.13.0"
+    "version": "1.13.1"
   },
   "plugins": [
     {
       "name": "vanilla-rails",
-      "description": "Design and review Rails applications using Vanilla Rails philosophy from 37signals/Basecamp. Emphasizes thin controllers, rich domain models, and avoiding unnecessary service layers.",
-      "version": "1.6.4",
+      "description": "Default Vanilla Rails architecture when writing Rails: thin controllers, rich models, no service layers unless genuinely justified.",
+      "version": "1.6.5",
       "author": {
         "name": "iuhoay",
         "url": "https://github.com/iuhoay"
