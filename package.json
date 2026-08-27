@@ -1,6 +1,6 @@
 {
   "name": "iuhoay-skills",
-  "version": "1.12.0",
+  "version": "1.14.0",
   "description": "Development workflow skills for Pi and Claude Code.",
   "license": "MIT",
   "author": {
@@ -39,7 +39,8 @@
       "./linear/skills/linear",
       "./question-it/skills/question-it",
       "./gh-stack/skills/gh-stack",
-      "./herdr-subagents/skills/herdr-subagents"
+      "./herdr-subagents/skills/herdr-subagents",
+      "./not-spam-pr/skills/not-spam-pr"
     ]
   }
 }

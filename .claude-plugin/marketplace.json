@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Development workflow skills for Rails, Linear, code review, and planning.",
-    "version": "1.13.1"
+    "version": "1.14.0"
   },
   "plugins": [
     {
@@ -80,6 +80,18 @@
       "homepage": "https://github.com/iuhoay/skills",
       "tags": ["github", "stacked-prs", "pull-requests", "gh-stack", "git", "workflow"],
       "source": "./gh-stack"
+    },
+    {
+      "name": "not-spam-pr",
+      "description": "Stop spam PRs: only the change required for the request, written in the repo's own commit/PR voice.",
+      "version": "1.0.0",
+      "author": {
+        "name": "iuhoay",
+        "url": "https://github.com/iuhoay"
+      },
+      "homepage": "https://github.com/iuhoay/skills",
+      "tags": ["pull-requests", "git", "commit", "hygiene", "drive-by", "auto-trigger"],
+      "source": "./not-spam-pr"
     }
   ]
 }

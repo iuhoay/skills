@@ -54,7 +54,7 @@ Some skills may omit `agents/` if they have no subagents, or include extra confi
 
 - **Plugin Name**: iuhoay-skills
 - **Categories**: productivity, utilities
-- **Version**: 1.13.0
+- **Version**: 1.14.0
 - **License**: MIT
 - **Owner**: iuhoay (https://github.com/iuhoay)
 
@@ -165,7 +165,26 @@ Automatically challenge the user's plans and decision-laden questions — questi
 
 ---
 
-### 6. GitHub Stacked PRs (`gh-stack/`)
+### 6. Stop Spam PR (`not-spam-pr/`)
+
+Stop spam PRs: surgical diffs in the repo's own commit/PR voice.
+
+**Version:** 1.0.0
+
+**Triggers:** implementing a feature or bugfix; writing a commit message, PR title, or PR body. Do not wait for "stop spam PR" / "drive-by". Skip review of other people's PRs, planning/question-it, gh-stack mechanics, Linear issue work, and extras the user explicitly asked for.
+
+**Philosophy:** House style, not a review lens. Stop spam PRs — only the change required for the request to be correct and green. Match `git log` — no templated PR bodies, no drive-by refactors.
+
+**Allowed Tools:** Read, Grep, Glob, Bash
+
+**Key references:**
+- `references/drive-by.md` — required vs drive-by hunks
+- `references/voice.md` — read `git log` before writing commit/PR text
+- `examples/before-after.md` — diff and voice examples
+
+---
+
+### 7. GitHub Stacked PRs (`gh-stack/`)
 
 Manage GitHub stacked pull requests with the official `gh stack` extension — break a large change into a chain of dependent PRs.
 
@@ -187,7 +206,7 @@ Manage GitHub stacked pull requests with the official `gh stack` extension — b
 
 ---
 
-### 7. Herdr Subagents (`herdr-subagents/`)
+### 8. Herdr Subagents (`herdr-subagents/`)
 
 Spawn and coordinate subagents as real herdr panes — visible, detachable, state-tracked delegation via the `herdr` CLI.
 

@@ -1,0 +1,19 @@
+{
+  "name": "not-spam-pr",
+  "version": "1.0.0",
+  "description": "Stop spam PRs: only the change required for the request, written in the repo's own commit/PR voice.",
+  "author": {
+    "name": "iuhoay",
+    "url": "https://github.com/iuhoay"
+  },
+  "repository": "https://github.com/iuhoay/skills",
+  "license": "MIT",
+  "keywords": [
+    "pull-requests",
+    "git",
+    "commit",
+    "hygiene",
+    "drive-by",
+    "auto-trigger"
+  ]
+}

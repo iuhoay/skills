@@ -44,6 +44,14 @@ Automatically challenges your plans and decision-laden questions — question th
 
 Every question carries hidden assumptions, so it questions the question first. Every challenge is grounded in facts from the environment (code, git history, configs) — never hollow "have you considered X" — and comes with a concrete better alternative and its cost. One point at a time; nothing is acted on without your confirmation. Adapted from [mattpocock/skills](https://github.com/mattpocock/skills).
 
+### Stop Spam PR
+
+Stop spam PRs: only the change required for the request to be correct and green, written in the repo's own commit/PR voice.
+
+**Agent skill:** `not-spam-pr` (auto-triggered on implement/fix and on commit/PR text)
+
+No drive-by refactors, extra files, or templated "This PR" bodies. Match `git log`. Skip reviews, planning, gh-stack mechanics, and extras the user explicitly asked for.
+
 ### GitHub Stacked PRs
 
 Manage stacked pull requests with the official `gh stack` extension — split a large change into a chain of dependent PRs.
@@ -82,7 +90,7 @@ npx skills add iuhoay/skills
 npx skills add iuhoay/skills --skill linear
 ```
 
-Run `npx skills list` to verify. This installs `vanilla-rails`, `rails-deps`, `question-it`, `linear`, `gh-stack`, and `herdr-subagents` using the cross-agent [Agent Skills specification](https://agentskills.io/specification). It does not install Claude Code-specific slash commands, subagents, plugin manifests, or `.lsp.json` configuration — use the Claude Code Plugin section below for those.
+Run `npx skills list` to verify. This installs `vanilla-rails`, `rails-deps`, `question-it`, `linear`, `gh-stack`, `herdr-subagents`, and `not-spam-pr` using the cross-agent [Agent Skills specification](https://agentskills.io/specification). It does not install Claude Code-specific slash commands, subagents, plugin manifests, or `.lsp.json` configuration — use the Claude Code Plugin section below for those.
 
 ### Agent Skills
 
@@ -97,7 +105,7 @@ gh skill install iuhoay/skills --all --agent codex --scope user
 
 Replace `--agent` with the desired host. To install one skill instead of all of them, replace `--all` with its name, such as `linear`.
 
-This installs `vanilla-rails`, `rails-deps`, `question-it`, `linear`, `gh-stack`, and `herdr-subagents` using the cross-agent [Agent Skills specification](https://agentskills.io/specification). It does not install Claude Code-specific slash commands, subagents, plugin manifests, or `.lsp.json` configuration. The `gh skill` command is currently a preview feature.
+This installs `vanilla-rails`, `rails-deps`, `question-it`, `linear`, `gh-stack`, `herdr-subagents`, and `not-spam-pr` using the cross-agent [Agent Skills specification](https://agentskills.io/specification). It does not install Claude Code-specific slash commands, subagents, plugin manifests, or `.lsp.json` configuration. The `gh skill` command is currently a preview feature.
 
 After installing for Amp, start a new session and use `skill: list` from the command palette to verify the skills are available.
 
@@ -113,6 +121,7 @@ For the complete Claude Code integration, including slash commands, subagents, a
 /plugin install linear@iuhoay-skills
 /plugin install question-it@iuhoay-skills
 /plugin install gh-stack@iuhoay-skills
+/plugin install not-spam-pr@iuhoay-skills
 ```
 
 `herdr-subagents` is deliberately absent from the marketplace: it is a pi-oriented skill (its callback bridge extension runs on pi's extension API), so it ships through the skills CLI / Pi Package paths only.
@@ -132,6 +141,7 @@ Then start a new Pi session, or run `/reload` in the current session. The packag
 - `/skill:linear`
 - `/skill:question-it`
 - `/skill:gh-stack`
+- `/skill:not-spam-pr`
 
 ## Platform-specific Integrations
 
