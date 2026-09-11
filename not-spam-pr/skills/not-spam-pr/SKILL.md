@@ -2,12 +2,13 @@
 name: not-spam-pr
 description: >
   Stop spam PRs: only the change required for the request to be correct and
-  green, written in the repo's own commit/PR voice. Load when implementing a
-  feature or bugfix, or when writing a commit message, PR title, or PR body.
-  Do not wait for the user to say "stop spam PR", "spam PR", "drive-by", or
-  "keep it small". Skip review of other people's
-  PRs, planning and question-it, gh-stack mechanics, Linear issue work, and
-  extras the user explicitly asked for.
+  green, written in the repo's own commit/PR voice. On the request path,
+  change or delete the existing implementation rather than wrapping it — a
+  smaller overlay is still spam. Load when implementing a feature or bugfix,
+  or when writing a commit message, PR title, or PR body. Do not wait for
+  the user to say "stop spam PR", "spam PR", "drive-by", or "keep it small".
+  Skip review of other people's PRs, planning and question-it, gh-stack
+  mechanics, Linear issue work, and extras the user explicitly asked for.
 allowed-tools:
   - Read
   - Grep
@@ -44,11 +45,18 @@ Name the request in one sentence. Every file and hunk must serve that sentence.
 The test: if dropping the hunk would not make the request fail or the tests
 go red, it is drive-by. Leave it out.
 
-**In:** production code the request needs; tests that fail without the change
-and pass with it; call sites that would be wrong, wouldn't compile, or wouldn't
-boot; schema, locales, or lockfile required by the change.
+A smaller overlay is still spam. If the request has to go through existing
+code, changing or deleting that code is in scope even when the diff is
+larger than a wrapper.
 
-**Out:** adjacent refactors; formatting on files you did not functionally
+**In:** production code the request needs, including replacing or deleting
+the existing implementation on the request path; tests that fail without
+the change and pass with it; call sites that would be wrong, wouldn't
+compile, or wouldn't boot; schema, locales, or lockfile required by the
+change.
+
+**Out:** a new wrapper, service, or adapter around code you could have
+changed; adjacent refactors; formatting on files you did not functionally
 touch; README/CHANGELOG unless the user asked or recent similar commits in
 this repo include them; comment polish; helper extractions "while here";
 taste renames; a second bug you noticed; CI, editorconfig, or gitignore
@@ -58,6 +66,18 @@ If you notice a real adjacent problem, mention it after the work. Do not mix
 it into the diff.
 
 See [references/drive-by.md](references/drive-by.md).
+
+## Replace, don't wrap
+
+Before adding code on the request path, ask whether the existing
+implementation is itself the problem. Prefer changing or deleting it
+over wrapping it.
+
+The old file's services, wrappers, and stale APIs are not a pattern you
+must continue. Tests, public APIs, and other house styles still are.
+
+A delete-and-rewrite of the request path is not drive-by. A new layer
+that exists so the old shape can stay is.
 
 ## Voice
 
@@ -91,6 +111,7 @@ See [references/voice.md](references/voice.md).
 ## Hard rules
 
 - Don't add a file the one-sentence request does not need.
+- Don't wrap code on the request path when you can change or delete it.
 - Don't reformat a file you didn't functionally change.
 - Don't mix a second concern into the same diff.
 - Don't write commit or PR text without reading `git log` first.

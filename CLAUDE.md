@@ -54,7 +54,7 @@ Some skills may omit `agents/` if they have no subagents, or include extra confi
 
 - **Plugin Name**: iuhoay-skills
 - **Categories**: productivity, utilities
-- **Version**: 1.14.0
+- **Version**: 1.15.0
 - **License**: MIT
 - **Owner**: iuhoay (https://github.com/iuhoay)
 
@@ -169,11 +169,11 @@ Automatically challenge the user's plans and decision-laden questions — questi
 
 Stop spam PRs: surgical diffs in the repo's own commit/PR voice.
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 
 **Triggers:** implementing a feature or bugfix; writing a commit message, PR title, or PR body. Do not wait for "stop spam PR" / "drive-by". Skip review of other people's PRs, planning/question-it, gh-stack mechanics, Linear issue work, and extras the user explicitly asked for.
 
-**Philosophy:** House style, not a review lens. Stop spam PRs — only the change required for the request to be correct and green. Match `git log` — no templated PR bodies, no drive-by refactors.
+**Philosophy:** House style, not a review lens. Stop spam PRs — only the change required for the request to be correct and green. On the request path, change or delete the existing implementation rather than wrapping it. Match `git log` — no templated PR bodies, no drive-by refactors.
 
 **Allowed Tools:** Read, Grep, Glob, Bash
 

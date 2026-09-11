@@ -1,7 +1,7 @@
 {
   "name": "not-spam-pr",
-  "version": "1.0.0",
-  "description": "Stop spam PRs: only the change required for the request, written in the repo's own commit/PR voice.",
+  "version": "1.1.0",
+  "description": "Stop spam PRs: only the change required for the request, written in the repo's own commit/PR voice. Change or delete existing code on the request path rather than wrapping it.",
   "author": {
     "name": "iuhoay",
     "url": "https://github.com/iuhoay"

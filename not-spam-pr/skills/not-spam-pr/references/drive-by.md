@@ -6,6 +6,7 @@ red. Everything else is drive-by.
 ## In scope
 
 - The production code that implements the request
+- Replacing or deleting the existing implementation the request has to go through — even if that diff is larger than a wrapper
 - Tests that fail without the change and pass with it
 - Call sites that would be wrong, wouldn't compile, or wouldn't boot
 - A migration or schema dump the feature needs
@@ -14,6 +15,7 @@ red. Everything else is drive-by.
 
 ## Out of scope
 
+- A new wrapper, service, or adapter around code on the request path you could have changed
 - Refactoring a neighboring method you happened to read
 - RuboCop / prettier / eslint autofix on files you did not functionally touch
 - README, CHANGELOG, CONTRIBUTING unless the user asked, or the last similar

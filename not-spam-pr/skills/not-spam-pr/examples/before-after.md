@@ -10,6 +10,17 @@ add a README note, and rubocop three other models.
 **After:** one guard, one test that would have caught it. Mention the email
 helper in the reply if it is actually wrong — do not mix it in.
 
+## Diff: change the path, don't wrap it
+
+**Request:** expire unpublished drafts after 30 days.
+
+**Before (spam):** add `DraftExpirationService` and a job that only
+calls the existing `Draft` helpers, so the old shape can stay.
+
+**After:** put `expire_unpublished!` on `Draft` (or change the existing
+method). Delete the helper the request made wrong. The extra service
+file is a layer, not a smaller change.
+
 ## Voice: match `git log`, don't template
 
 **Repo log:**
