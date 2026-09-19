@@ -76,6 +76,14 @@ Requires [herdr](https://herdr.dev) with the agent running inside a herdr-manage
 
 **Fire-and-forget callbacks:** the skill ships a pi extension (`herdr-subagents/skills/herdr-subagents/extensions/herdr-callbacks.ts`) that watches `~/.pi/agent/callbacks/` and injects subagent completion files into the parent session via `sendUserMessage` — delegate long work (CI watching, waits) without blocking, and get woken when it lands. Copy the extension to `~/.pi/agent/extensions/` and `/reload` in pi.
 
+### Chrome DevTools
+
+Inspect the Chrome tab the user already has open — screenshot, evaluate, attach via `chrome-devtools --autoConnect`. Does not launch a second browser.
+
+**Agent skill:** `chrome-devtools`
+
+Pi-oriented: no Claude Code plugin manifest and not in the marketplace. Ships a wrapper that avoids PATH `chrome-devtools` 1.1.0 (cannot autoConnect on Chrome 153) and, after a short page snapshot, batches TypeSafe/Jev questions (`typesafe_evaluate`) instead of dumping the DOM. Requires Chrome remote debugging (`chrome://inspect/#remote-debugging`) and Full Disk Access for the terminal running pi.
+
 ## Installation
 
 ### skills CLI (skills.sh)
@@ -90,7 +98,7 @@ npx skills add iuhoay/skills
 npx skills add iuhoay/skills --skill linear
 ```
 
-Run `npx skills list` to verify. This installs `vanilla-rails`, `rails-deps`, `question-it`, `linear`, `gh-stack`, `herdr-subagents`, and `not-spam-pr` using the cross-agent [Agent Skills specification](https://agentskills.io/specification). It does not install Claude Code-specific slash commands, subagents, plugin manifests, or `.lsp.json` configuration — use the Claude Code Plugin section below for those.
+Run `npx skills list` to verify. This installs `vanilla-rails`, `rails-deps`, `question-it`, `linear`, `gh-stack`, `herdr-subagents`, `not-spam-pr`, and `chrome-devtools` using the cross-agent [Agent Skills specification](https://agentskills.io/specification). It does not install Claude Code-specific slash commands, subagents, plugin manifests, or `.lsp.json` configuration — use the Claude Code Plugin section below for those.
 
 ### Agent Skills
 
@@ -105,7 +113,7 @@ gh skill install iuhoay/skills --all --agent codex --scope user
 
 Replace `--agent` with the desired host. To install one skill instead of all of them, replace `--all` with its name, such as `linear`.
 
-This installs `vanilla-rails`, `rails-deps`, `question-it`, `linear`, `gh-stack`, `herdr-subagents`, and `not-spam-pr` using the cross-agent [Agent Skills specification](https://agentskills.io/specification). It does not install Claude Code-specific slash commands, subagents, plugin manifests, or `.lsp.json` configuration. The `gh skill` command is currently a preview feature.
+This installs `vanilla-rails`, `rails-deps`, `question-it`, `linear`, `gh-stack`, `herdr-subagents`, `not-spam-pr`, and `chrome-devtools` using the cross-agent [Agent Skills specification](https://agentskills.io/specification). It does not install Claude Code-specific slash commands, subagents, plugin manifests, or `.lsp.json` configuration. The `gh skill` command is currently a preview feature.
 
 After installing for Amp, start a new session and use `skill: list` from the command palette to verify the skills are available.
 
@@ -124,7 +132,7 @@ For the complete Claude Code integration, including slash commands, subagents, a
 /plugin install not-spam-pr@iuhoay-skills
 ```
 
-`herdr-subagents` is deliberately absent from the marketplace: it is a pi-oriented skill (its callback bridge extension runs on pi's extension API), so it ships through the skills CLI / Pi Package paths only.
+`herdr-subagents` and `chrome-devtools` are deliberately absent from the marketplace: they are pi-oriented skills, so they ship through the skills CLI / Pi Package paths only.
 
 ### Pi Package
 
@@ -142,6 +150,7 @@ Then start a new Pi session, or run `/reload` in the current session. The packag
 - `/skill:question-it`
 - `/skill:gh-stack`
 - `/skill:not-spam-pr`
+- `/skill:chrome-devtools`
 
 ## Platform-specific Integrations
 

@@ -54,7 +54,7 @@ Some skills may omit `agents/` if they have no subagents, or include extra confi
 
 - **Plugin Name**: iuhoay-skills
 - **Categories**: productivity, utilities
-- **Version**: 1.15.0
+- **Version**: 1.16.0
 - **License**: MIT
 - **Owner**: iuhoay (https://github.com/iuhoay)
 
@@ -222,6 +222,20 @@ Spawn and coordinate subagents as real herdr panes — visible, detachable, stat
 **Pi-oriented:** deliberately has NO `.claude-plugin/plugin.json` and is not in the marketplace — the orchestration is agent-agnostic, but the callback extension runs on pi's extension API. Requires `HERDR_ENV=1`.
 
 **Allowed Tools:** Bash, Read, Grep
+
+---
+
+### 9. Chrome DevTools (`chrome-devtools/`)
+
+Attach to the user's already-open Chrome tab for local development verification via the `chrome-devtools` CLI (`--autoConnect`). After a short page snapshot, batch TypeSafe/Jev questions instead of dumping the DOM.
+
+**Version:** 1.0.0
+
+**Triggers:** look at the current page, a localhost URL already open, verify UI in the Chrome they are using. Not launching a new browser, web search, or MCP.
+
+**Pi-oriented:** no `.claude-plugin/plugin.json`, not in the marketplace — reaches pi via `pi.skills`. Wrapper at `scripts/chrome-devtools.sh` prefers chrome-devtools 1.9+ (PATH 1.1.0 cannot autoConnect). Jev via `typesafe_evaluate` (`npm:pi-typesafe`) is optional; ask for `/typesafe enable` if the tool is missing.
+
+**Allowed Tools:** Bash, Read
 
 ---
 

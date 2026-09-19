@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Development workflow skills for Rails, Linear, code review, and planning.",
-    "version": "1.15.0"
+    "version": "1.16.0"
   },
   "plugins": [
     {
