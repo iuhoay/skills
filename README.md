@@ -1,6 +1,6 @@
 # iuhoay/skills
 
-A collection of development workflow skills for [Amp](https://ampcode.com), [Pi](https://pi.dev), and [Claude Code](https://docs.anthropic.com/en/docs/claude-code).
+A collection of development workflow skills for coding agents.
 
 [![skills.sh](https://skills.sh/b/iuhoay/skills)](https://skills.sh/iuhoay/skills)
 
