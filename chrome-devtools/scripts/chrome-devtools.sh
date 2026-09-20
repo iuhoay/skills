@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# PATH may have chrome-devtools 1.1.0 (Homebrew). That daemon cannot
-# autoConnect to Chrome 153. Prefer 1.9+; otherwise bun's cached 1.9.x.
+PINNED='chrome-devtools-mcp@1.9.0'
 
 version_ok() {
   local raw last
@@ -15,28 +14,32 @@ version_ok() {
 }
 
 resolve_cli() {
-  local p js
+  local p
   p="$(command -v chrome-devtools 2>/dev/null || true)"
   if [[ -n "$p" ]] && version_ok "$p"; then
     printf '%s\n' "$p"
     return 0
   fi
-  js="$(ls -1d "$HOME"/.bun/install/cache/chrome-devtools-mcp@1.9.*/build/src/bin/chrome-devtools.js 2>/dev/null | tail -1 || true)"
-  if [[ -n "$js" && -f "$js" ]]; then
-    printf 'node:%s\n' "$js"
+  if command -v bunx >/dev/null 2>&1; then
+    printf 'bunx\n'
     return 0
   fi
-  echo "chrome-devtools 1.9+ not found. Install chrome-devtools-mcp@1.9.0 or restore the bun cache copy." >&2
+  if command -v npx >/dev/null 2>&1; then
+    printf 'npx\n'
+    return 0
+  fi
+  echo "chrome-devtools 1.9+ not found. Install bun or npm, or put chrome-devtools 1.9+ on PATH." >&2
   exit 127
 }
 
 run_cli() {
   local cli="$1"
   shift
-  if [[ "$cli" == node:* ]]; then
-    exec node "${cli#node:}" "$@"
-  fi
-  exec "$cli" "$@"
+  case "$cli" in
+    bunx) exec bunx "$PINNED" "$@" ;;
+    npx) exec npx --yes "$PINNED" "$@" ;;
+    *) exec "$cli" "$@" ;;
+  esac
 }
 
 CLI="$(resolve_cli)"

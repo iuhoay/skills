@@ -7,7 +7,7 @@ This file provides guidance to coding agents working in this repository.
 A monorepo of [Agent Skills](https://agentskills.io/specification) for coding agents. Install via the skills CLI, `gh skill install`, or as a Pi package (`iuhoay-skills`).
 
 - **Package name**: iuhoay-skills
-- **Version**: 1.17.0
+- **Version**: 1.18.0
 - **License**: MIT
 - **Owner**: iuhoay (https://github.com/iuhoay)
 
