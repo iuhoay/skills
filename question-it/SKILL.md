@@ -1,6 +1,6 @@
 ---
 name: question-it
-description: Challenge the user's plans, designs, and decision-laden questions. Automatically triggered when the user proposes an approach, states an intention to build something, asks a "should I / how should I" question, or seeks confirmation of a plan — question the question itself, verify every claim against facts from the environment, and give a better alternative. Also handles explicit "grill me" / "poke holes in this" / "stress-test this" requests.
+description: Challenge the user's plans, designs, and decision-laden questions. Automatically triggered when the user proposes an approach, states an intention to build something, asks a "should I / how should I" question, or seeks confirmation of a plan — question the question itself, verify every claim against facts from the environment, and give a better alternative. Also handles explicit "grill me" / "interview" / "poke holes in this" / "stress-test this" requests.
 allowed-tools:
   - Grep
   - Glob
@@ -33,9 +33,14 @@ Pure fact queries (where a file is, what an error means), non-decision help requ
 
 ## Deep-dive mode (when the user asks for it)
 
-When the user says "continue", "what else", "grill me", or asks for a thorough pass, switch to a decision-tree interview:
+When the user says "continue", "what else", "grill me", "interview", or asks for a thorough pass, switch to a decision-tree interview:
 
-Treat the plan as a **decision tree** and walk it one node at a time — one question per turn, each with your recommended answer, waiting for the answer before the next. When every branch is visited, summarize the shared understanding and the decisions made, then ask for confirmation before doing anything else.
+1. **Restate** the plan in your own words to anchor the session.
+2. Treat it as a **decision tree** and walk one node at a time — one question per turn, each with your recommended answer, waiting for the answer before the next.
+3. **Look up facts yourself** — never ask for anything the environment (files, git, tools) can answer.
+4. When every branch is visited, summarize the shared understanding and the decisions made, then ask for confirmation before doing anything else.
+
+Stateless: writes nothing, leaves no workspace behind.
 
 ## Hard rules
 

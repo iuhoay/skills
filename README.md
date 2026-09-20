@@ -12,8 +12,6 @@ Default architecture when writing Rails, from Vanilla Rails / 37signals/Basecamp
 
 **Agent skill:** `vanilla-rails` (auto-loaded on Rails implementation)
 
-**Claude Code commands:** `/vanilla-rails:review` | `/vanilla-rails:analyze` | `/vanilla-rails:simplify [goal]`
-
 Based on [Fizzy](https://github.com/basecamp/fizzy): thin controllers, rich domain models, no service layers unless genuinely justified. "Vanilla Rails is plenty" - DHH.
 
 ### Rails Dependencies
@@ -21,8 +19,6 @@ Based on [Fizzy](https://github.com/basecamp/fizzy): thin controllers, rich doma
 Configure recommended Rails development dependencies for better developer experience.
 
 **Agent skill:** `rails-deps`
-
-**Claude Code commands:** `/rails-deps:check` | `/rails-deps:install [gem]` | `/rails-deps:setup`
 
 Recommended gems: strong_migrations, herb, bullet, letter_opener.
 
@@ -40,8 +36,6 @@ Automatically challenges your plans and decision-laden questions — question th
 
 **Agent skill:** `question-it` (auto-triggered)
 
-**Claude Code commands:** `/question-it:interview [plan]` — manual decision-tree interview
-
 Every question carries hidden assumptions, so it questions the question first. Every challenge is grounded in facts from the environment (code, git history, configs) — never hollow "have you considered X" — and comes with a concrete better alternative and its cost. One point at a time; nothing is acted on without your confirmation. Adapted from [mattpocock/skills](https://github.com/mattpocock/skills).
 
 ### Stop Spam PR
@@ -58,8 +52,6 @@ Manage stacked pull requests with the official `gh stack` extension — split a 
 
 **Agent skill:** `gh-stack`
 
-**Claude Code commands:** `/gh-stack:setup` — install and verify the extension
-
 Create stacks (`init`/`add`), submit PR chains (`submit`), keep them in sync (`sync`), land them (`merge`), and navigate (`bottom`/`top`/`up`/`down`/`trunk`). Agent-friendly details: `submit --auto` skips the interactive editor, `view --json` gives machine-readable state, exit codes 0-10 drive recovery, and `link` works without local tracking for external tools like jj or Sapling. Ships references on layer design, per-command behavior, and troubleshooting.
 
 ### Herdr Subagents
@@ -68,13 +60,9 @@ Spawn and coordinate subagents as **real herdr panes** — visible, detachable, 
 
 **Agent skill:** `herdr-subagents`
 
-**Pi command:** `/herdr-subagents:spawn <task>` (ships via the Pi Package path) — split a sibling pane, start a pi subagent, submit the task, collect the result
-
-Pi-oriented: the skill has no Claude Code plugin manifest and is not published to the marketplace — the orchestration works from any agent, but the callback bridge extension (`herdr-callbacks.ts`) runs on pi's extension API.
-
 Requires [herdr](https://herdr.dev) with the agent running inside a herdr-managed pane (`HERDR_ENV=1`). Supports single, parallel, and chained subagent workflows; the guardrail prevents using the skill outside herdr.
 
-**Fire-and-forget callbacks:** the skill ships a pi extension (`herdr-subagents/skills/herdr-subagents/extensions/herdr-callbacks.ts`) that watches `~/.pi/agent/callbacks/` and injects subagent completion files into the parent session via `sendUserMessage` — delegate long work (CI watching, waits) without blocking, and get woken when it lands. Copy the extension to `~/.pi/agent/extensions/` and `/reload` in pi.
+The callback bridge (`extensions/herdr-callbacks.ts`) is pi-only: it watches `~/.pi/agent/callbacks/<pane>/` and injects subagent completion files into the parent session via `sendUserMessage`. Copy the extension to `~/.pi/agent/extensions/` and `/reload` in pi.
 
 ### Chrome DevTools
 
@@ -82,7 +70,7 @@ Inspect the Chrome tab the user already has open — screenshot, evaluate, attac
 
 **Agent skill:** `chrome-devtools`
 
-Pi-oriented: no Claude Code plugin manifest and not in the marketplace. Ships a wrapper that avoids PATH `chrome-devtools` 1.1.0 (cannot autoConnect on Chrome 153) and, after a short page snapshot, batches TypeSafe/Jev questions (`typesafe_evaluate`) instead of dumping the DOM. Requires Chrome remote debugging (`chrome://inspect/#remote-debugging`) and Full Disk Access for the terminal running pi.
+Ships a wrapper that avoids PATH `chrome-devtools` 1.1.0 (cannot autoConnect on Chrome 153) and, after a short page snapshot, batches TypeSafe/Jev questions (`typesafe_evaluate`) instead of dumping the DOM. Requires Chrome remote debugging (`chrome://inspect/#remote-debugging`) and Full Disk Access for the terminal running pi.
 
 ## Installation
 
@@ -98,7 +86,7 @@ npx skills add iuhoay/skills
 npx skills add iuhoay/skills --skill linear
 ```
 
-Run `npx skills list` to verify. This installs `vanilla-rails`, `rails-deps`, `question-it`, `linear`, `gh-stack`, `herdr-subagents`, `not-spam-pr`, and `chrome-devtools` using the cross-agent [Agent Skills specification](https://agentskills.io/specification). It does not install Claude Code-specific slash commands, subagents, plugin manifests, or `.lsp.json` configuration — use the Claude Code Plugin section below for those.
+Run `npx skills list` to verify. This installs `vanilla-rails`, `rails-deps`, `question-it`, `linear`, `gh-stack`, `herdr-subagents`, `not-spam-pr`, and `chrome-devtools` using the cross-agent [Agent Skills specification](https://agentskills.io/specification).
 
 ### Agent Skills
 
@@ -113,26 +101,9 @@ gh skill install iuhoay/skills --all --agent codex --scope user
 
 Replace `--agent` with the desired host. To install one skill instead of all of them, replace `--all` with its name, such as `linear`.
 
-This installs `vanilla-rails`, `rails-deps`, `question-it`, `linear`, `gh-stack`, `herdr-subagents`, `not-spam-pr`, and `chrome-devtools` using the cross-agent [Agent Skills specification](https://agentskills.io/specification). It does not install Claude Code-specific slash commands, subagents, plugin manifests, or `.lsp.json` configuration. The `gh skill` command is currently a preview feature.
+This installs `vanilla-rails`, `rails-deps`, `question-it`, `linear`, `gh-stack`, `herdr-subagents`, `not-spam-pr`, and `chrome-devtools`. The `gh skill` command is currently a preview feature.
 
 After installing for Amp, start a new session and use `skill: list` from the command palette to verify the skills are available.
-
-### Claude Code Plugin
-
-For the complete Claude Code integration, including slash commands, subagents, and Ruby LSP configuration, install the native plugins:
-
-```text
-/plugin marketplace add iuhoay/skills
-/plugin install vanilla-rails@iuhoay-skills
-/plugin install rails-deps@iuhoay-skills
-/plugin install ruby-lsp@iuhoay-skills
-/plugin install linear@iuhoay-skills
-/plugin install question-it@iuhoay-skills
-/plugin install gh-stack@iuhoay-skills
-/plugin install not-spam-pr@iuhoay-skills
-```
-
-`herdr-subagents` and `chrome-devtools` are deliberately absent from the marketplace: they are pi-oriented skills, so they ship through the skills CLI / Pi Package paths only.
 
 ### Pi Package
 
@@ -150,26 +121,15 @@ Then start a new Pi session, or run `/reload` in the current session. The packag
 - `/skill:question-it`
 - `/skill:gh-stack`
 - `/skill:not-spam-pr`
+- `/skill:herdr-subagents`
 - `/skill:chrome-devtools`
 
-## Platform-specific Integrations
+## Linear CLI Setup
 
-### Ruby LSP (Claude Code only)
-
-The Ruby LSP plugin provides diagnostics, code navigation (go to definition, find references, hover), and Ruby/Rails language awareness. Amp and Pi do not load its `.lsp.json` configuration.
-
-Install [ruby-lsp](https://github.com/Shopify/ruby-lsp) before installing the Claude Code plugin:
+The Linear skill's bundled CLI works across supported agents and requires Node.js 20 or newer. From a clone of this repository, install and authenticate the CLI with:
 
 ```bash
-gem install ruby-lsp
-```
-
-### Linear CLI Setup
-
-The Linear skill's bundled CLI works across supported agents and requires Node.js 20 or newer. Claude Code users can run `/linear:setup`. From a clone of this repository, install and authenticate the CLI with:
-
-```bash
-node linear/skills/linear/scripts/linear.mjs install
+node linear/scripts/linear.mjs install
 linear auth login
 linear issues list --team ENG
 ```

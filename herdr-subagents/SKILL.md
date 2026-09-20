@@ -124,14 +124,12 @@ Callback protocol:
 
 The callback bridge is a pi extension shipped with this skill. **It is pi-only**: it runs on pi's extension API (`sendUserMessage`), so Claude Code or codex users get the orchestration workflow but not the callback delivery. The file protocol itself is agent-agnostic — for other agents, watch `~/.pi/agent/callbacks/` and inject the content with that agent's own mechanism (e.g. a Claude Code hook).
 
-1. Copy (or symlink) it into pi's extension directory — run from the repo root (the path below is repo-relative, not skill-relative):
+1. Copy (or symlink) `extensions/herdr-callbacks.ts` (relative to this `SKILL.md`) into pi's extension directory:
 
    ```bash
    mkdir -p ~/.pi/agent/extensions
-   cp herdr-subagents/skills/herdr-subagents/extensions/herdr-callbacks.ts ~/.pi/agent/extensions/herdr-callbacks.ts
+   cp /absolute/path/to/this/skill/extensions/herdr-callbacks.ts ~/.pi/agent/extensions/herdr-callbacks.ts
    ```
-
-   If you installed the skill via the skills CLI, the same file ships inside the skill directory (`extensions/herdr-callbacks.ts` relative to the SKILL.md).
 
 2. Run `/reload` in pi (built-in, keeps the session) or restart pi. The watcher starts at module load and survives reloads; expect a `Watching ~/.pi/agent/callbacks/...` notification.
 

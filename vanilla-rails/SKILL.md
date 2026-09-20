@@ -71,13 +71,13 @@ This skill is the house style for Rails work, not an optional review lens. When 
 
 **Skip this overlay for** migrations, gem/dependency bumps, CSS/JS, view-only markup, credentials, and anything that is not Rails application code.
 
-## Explicit commands
+## Review, analyze, simplify
 
 Use these only when the user asks to review, analyze, or plan a simplification — not as the default response to Rails implementation:
 
-1. **Review code changes** - `/vanilla-rails:review`
-2. **Analyze codebase** - `/vanilla-rails:analyze`
-3. **Plan simplification** - `/vanilla-rails:simplify [goal]`
+- Review code changes — [references/review.md](references/review.md)
+- Analyze a codebase — [references/analyze.md](references/analyze.md)
+- Plan simplification — [references/simplify.md](references/simplify.md)
 
 ## Core Principles
 
@@ -261,7 +261,7 @@ Only use `!` for methods with a counterpart without `!`. Don't use `!` to flag d
 
 ## Red Flags (Over-Engineering)
 
-Run `/vanilla-rails:analyze` to detect:
+See [analyze.md](references/analyze.md) to detect:
 
 - 🔴 Service objects for simple operations
 - 🔴 Business logic in services instead of models

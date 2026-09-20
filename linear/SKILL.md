@@ -28,6 +28,12 @@ Otherwise, fall back to the bundled CLI at `scripts/linear.mjs`, relative to thi
 node /absolute/path/to/this/skill/scripts/linear.mjs <command>
 ```
 
+To install a user-level `linear` symlink instead, confirm `~/.local/bin` is on `PATH` and run:
+
+```bash
+node /absolute/path/to/this/skill/scripts/linear.mjs install
+```
+
 The CLI detects the Git `origin` and applies defaults from the local, untracked `~/.config/linear-cli/repository-mappings.json`. Inspect them with `linear context`, configure the current repository with `linear context set --team ENG --project Platform`, and remove them with `linear context unset`. Explicit flags always override local defaults. Never commit this machine-specific mapping file.
 
 A repository may map to several Linear projects (for example `acme-corp/storefront` → `Storefront, Admin`): pass `--project "Storefront,Admin"` to `linear context set`, which stores a `projects` array (the legacy single `project` string is still read for older entries). When a repository maps to multiple projects, `linear issues create` **fails with a clear error unless `--project` is passed explicitly** — it never silently picks one, because issues landing in the wrong project are worse than an extra flag.

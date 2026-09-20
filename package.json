@@ -1,7 +1,7 @@
 {
   "name": "iuhoay-skills",
-  "version": "1.16.0",
-  "description": "Development workflow skills for Pi and Claude Code.",
+  "version": "1.17.0",
+  "description": "Development workflow skills for coding agents.",
   "license": "MIT",
   "author": {
     "name": "iuhoay",
@@ -27,21 +27,21 @@
     "subagents"
   ],
   "bin": {
-    "linear": "./linear/skills/linear/scripts/linear.mjs"
+    "linear": "./linear/scripts/linear.mjs"
   },
   "scripts": {
-    "test": "node --test linear/skills/linear/scripts/linear.test.mjs"
+    "test": "node --test linear/scripts/linear.test.mjs"
   },
   "pi": {
     "skills": [
-      "./vanilla-rails/skills/vanilla-rails",
-      "./rails-deps/skills/rails-deps",
-      "./linear/skills/linear",
-      "./question-it/skills/question-it",
-      "./gh-stack/skills/gh-stack",
-      "./herdr-subagents/skills/herdr-subagents",
-      "./not-spam-pr/skills/not-spam-pr",
-      "./chrome-devtools/skills/chrome-devtools"
+      "./vanilla-rails",
+      "./rails-deps",
+      "./linear",
+      "./question-it",
+      "./gh-stack",
+      "./herdr-subagents",
+      "./not-spam-pr",
+      "./chrome-devtools"
     ]
   }
 }

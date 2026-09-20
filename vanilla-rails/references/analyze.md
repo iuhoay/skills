@@ -1,15 +1,10 @@
-# /vanilla-rails:analyze
+# Analyze
 
 Analyze a Rails codebase for over-engineering and opportunities to simplify toward Vanilla Rails.
 
-## Usage
+## Scope
 
-```
-/vanilla-rails:analyze                    # Analyze entire codebase
-/vanilla-rails:analyze [path]             # Analyze specific directory
-/vanilla-rails:analyze:services           # Focus on service layer analysis
-/vanilla-rails:analyze:models             # Focus on model health
-```
+Analyze the entire codebase, a path, the service layer, or model health.
 
 ## Analysis Areas
 

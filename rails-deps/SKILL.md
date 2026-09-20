@@ -12,9 +12,13 @@ allowed-tools:
 
 Configure recommended Rails development dependencies for better developer experience and code quality.
 
-## Quick Start
+## Workflows
 
-Run `/rails-deps:check` to see which recommended gems are installed in your project.
+**Check** — read `Gemfile` and `Gemfile.lock` for the four gems; report installed, missing, or in-Gemfile-but-not-locked; give install commands for anything missing.
+
+**Install [gem]** — add that gem to the Gemfile if absent, run `bundle install`, run its generator if it has one, then follow its reference for configuration.
+
+**Setup** — walk through all four gems, ask whether to install each, then apply the install path for the chosen set.
 
 ## Recommended Gems
 
@@ -24,14 +28,6 @@ Run `/rails-deps:check` to see which recommended gems are installed in your proj
 | [herb](https://github.com/marcoroth/herb) | Tooling | HTML+ERB parsing, formatting, and linting |
 | [bullet](https://github.com/flyerhzm/bullet) | Performance | Detect N+1 queries |
 | [letter_opener](https://github.com/ryanb/letter_opener) | Development | Preview emails in browser |
-
-## Commands
-
-| Command | Description |
-|---------|-------------|
-| `/rails-deps:check` | Check which recommended gems are installed |
-| `/rails-deps:install [gem]` | Install and configure a specific gem |
-| `/rails-deps:setup` | Interactive setup for all recommended gems |
 
 ## Gem Details
 

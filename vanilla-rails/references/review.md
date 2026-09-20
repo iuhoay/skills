@@ -1,15 +1,10 @@
-# /vanilla-rails:review
+# Review
 
 Code review from Vanilla Rails philosophy perspective.
 
-## Usage
+## Scope
 
-```
-/vanilla-rails:review                    # Review uncommitted changes
-/vanilla-rails:review [file_path]        # Review specific file
-/vanilla-rails:review --staged           # Review staged changes
-/vanilla-rails:review --branch main      # Review changes vs branch
-```
+Review uncommitted changes, a specific file, staged changes, or changes versus a named branch.
 
 ## Process
 

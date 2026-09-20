@@ -4,263 +4,124 @@ This file provides guidance to coding agents working in this repository.
 
 ## Repository Overview
 
-This is a Claude Code plugin repository ("iuhoay-skills") that hosts a collection of skills for Rails development and code review. The plugin is published to the Claude plugin marketplace.
+A monorepo of [Agent Skills](https://agentskills.io/specification) for coding agents. Install via the skills CLI, `gh skill install`, or as a Pi package (`iuhoay-skills`).
 
-## Plugin Architecture
-
-This is a **monorepo** of Claude Code skills. Each skill is a self-contained package with its own plugin manifest.
-
-### Root Structure
-
-```
-.claude-plugin/marketplace.json    # Root plugin manifest (aggregates all skills)
-README.md                          # Installation and usage guide
-```
-
-### Individual Skill Structure
-
-Each skill subdirectory follows this structure:
-
-```
-skill-name/
-├── .claude-plugin/
-│   └── plugin.json              # Skill's plugin manifest (name, version, keywords)
-├── agents/
-│   └── agent-name.md            # Task agent definitions (model: inherit)
-├── commands/
-│   └── command-name.md          # Slash command implementations
-└── skills/
-    └── skill-name/
-        ├── SKILL.md             # Main skill file with triggers, allowed tools
-        ├── references/          # Pattern libraries and documentation
-        └── examples/            # Before/after code examples
-```
-
-Some skills may omit `agents/` if they have no subagents, or include extra config files (e.g., `.lsp.json` for ruby-lsp).
-
-### Key Architecture Concepts
-
-**Three-tier manifest system:**
-1. Root `marketplace.json` - Aggregates all skills into one plugin
-2. Per-skill `plugin.json` - Individual skill metadata
-3. `SKILL.md` - Trigger phrases, allowed tools, and behavior
-
-**Agent vs Command vs Skill:**
-- **Skill** (SKILL.md) - Auto-triggered by keywords in conversation; defines allowed tools
-- **Command** (commands/*.md) - Invoked via `/prefix:command`; explicit user action
-- **Agent** (agents/*.md) - Task tool subprocess; inherits model from parent
-
-## Plugin Metadata
-
-- **Plugin Name**: iuhoay-skills
-- **Categories**: productivity, utilities
-- **Version**: 1.16.0
+- **Package name**: iuhoay-skills
+- **Version**: 1.17.0
 - **License**: MIT
 - **Owner**: iuhoay (https://github.com/iuhoay)
 
+## Layout
+
+Each top-level directory is one skill. The skill directory contains `SKILL.md` (required) plus optional `references/`, `examples/`, `scripts/`, or `extensions/`.
+
+```
+skill-name/
+├── SKILL.md
+├── references/
+├── examples/
+└── scripts/
+```
+
+Root:
+
+```
+package.json    # pi.skills allowlist, linear bin, version
+README.md
+AGENTS.md
+```
+
+`package.json` `pi.skills` is an explicit allowlist — new skill directories are not auto-discovered. Each entry must be a directory that contains `SKILL.md`. Local-path Pi installs read disk live; a session `/reload` is enough after a manifest edit.
+
 ## Available Skills
 
-### 1. Vanilla Rails (`vanilla-rails/`)
+### Vanilla Rails (`vanilla-rails/`)
 
 Default architecture constraint when writing Rails, from Vanilla Rails / 37signals/Basecamp.
 
-**Version:** 1.6.5
-
-**Commands:**
-- `/vanilla-rails:review` - Review code changes for over-engineering
-- `/vanilla-rails:analyze` - Analyze codebase for simplification opportunities
-- `/vanilla-rails:simplify [goal]` - Plan incremental simplification
-
-**Triggers:** creating or editing controllers, models, jobs, concerns, mailers, routes, or form objects; custom action vs nested resource; extracting a service/form/query/interactor; deciding where business logic lives. Not migrations, gem bumps, CSS/JS, credentials.
+**Triggers:** creating or editing controllers, models, jobs, concerns, mailers, routes, or form objects; custom action vs nested resource; extracting a service/form/query/interactor; deciding where business logic lives. Also Rails reviews and simplification. Not migrations, gem bumps, CSS/JS, credentials.
 
 **Philosophy:** House style, not a review lens. Thin controllers, rich domain models, no service layers unless genuinely justified.
 
-**Allowed Tools:** Grep, Glob, Read, Task
+When the user asks to review, analyze, or plan a simplification, follow `references/review.md`, `references/analyze.md`, and `references/simplify.md`.
 
-**Key references:**
-- `references/anti-patterns.md` - Model boundary violations, service layer abuse, anemic models, fat controllers
-- `references/patterns/` - plain-activerecord, rich-models, concerns, delegated-type, when-to-use-services
-- `examples/before-after.md` - Real-world before/after refactoring examples
+### Rails Deps (`rails-deps/`)
 
-**Agent:** `agents/vanilla-rails-reviewer.md` - Applies Vanilla Rails review principles as a subagent
+Configure recommended Rails development dependencies: strong_migrations, herb, bullet, letter_opener.
 
----
+**Triggers:** "rails dependencies", "rails gems", "development gems", those gem names.
 
-### 2. Rails Deps (`rails-deps/`)
+Workflows: check Gemfile/lock, install one gem, or walk through all four. Details in `references/`.
 
-Configure and manage recommended Rails development dependencies for better developer experience.
-
-**Version:** 1.0.0
-
-**Commands:**
-- `/rails-deps:check` - Check which recommended gems are installed
-- `/rails-deps:install [gem]` - Install and configure a specific gem
-- `/rails-deps:setup` - Interactive setup for all recommended gems
-
-**Triggers:** "rails dependencies", "rails gems", "development gems", "strong_migrations", "bullet gem", "letter_opener", "herb gem"
-
-**Allowed Tools:** Read, Glob, Grep, Bash
-
-**Recommended gems:**
-- **strong_migrations** - Catch unsafe database migrations in development
-- **herb** - HTML+ERB parsing, formatting, and linting
-- **bullet** - Detect N+1 query problems
-- **letter_opener** - Preview emails in browser instead of sending
-
-**References:** Detailed setup docs in `references/` for each gem (strong_migrations.md, herb.md, bullet.md, letter_opener.md)
-
----
-
-### 3. Ruby LSP (`ruby-lsp/`)
-
-Ruby Language Server Protocol integration for code intelligence in editors.
-
-**Version:** 1.0.0
-
-**Configuration:** `.lsp.json` defines LSP server settings:
-```json
-{
-  "ruby": {
-    "command": "ruby-lsp",
-    "extensionToLanguage": {".rb": "ruby"},
-    "transport": "stdio"
-  }
-}
-```
-
-**Features:** Instant diagnostics, go-to-definition, find references, hover documentation, language-aware code navigation for Ruby/Rails projects.
-
----
-
-### 4. Linear (`linear/`)
+### Linear (`linear/`)
 
 Manage Linear issues without MCP through a bundled JSON-first Node.js CLI.
 
-**Version:** 1.0.0
-
-**Command:** `/linear:setup`
-
 **Triggers:** Linear issue search/read/create/update, pull-request linking, comments, and project-management requests.
 
-**Allowed Tools:** Bash, Read
+**CLI:** `linear/scripts/linear.mjs` — direct GraphQL API access; OAuth 2.0 + PKCE is the default login, refreshable credentials live in macOS Keychain (or a mode-0600 config file), and `LINEAR_API_KEY` remains a fallback.
 
-**CLI:** `linear/skills/linear/scripts/linear.mjs` — direct GraphQL API access; OAuth 2.0 + PKCE is the default login, refreshable credentials live in macOS Keychain (or a mode-0600 config file), and `LINEAR_API_KEY` remains a fallback.
+Stay organization-neutral in shipped files: ENG/Platform/acme examples only. Real team/project mappings live in `~/.config` and must never enter Git. Multi-project repo mappings: `issues create` must fail without explicit `--project`; legacy `project` string shape must stay readable.
 
-### 5. Question It (`question-it/`)
+### Question It (`question-it/`)
 
 Automatically challenge the user's plans and decision-laden questions — question the question itself, verify against facts, and give a better alternative.
 
-**Version:** 1.2.0
+**Auto-triggers:** When the user proposes a plan or approach, asks a "should I / how should I" or "is this ok" question, or seeks confirmation — pure fact queries do not trigger. Explicit "grill me" / "interview" / "poke holes in this" enter deep-dive mode.
 
-**Commands:**
-- `/question-it:interview [plan]` - Full decision-tree interview (manual deep-dive)
+Every challenge must cite facts from the environment; no hollow "have you considered X". Every challenge comes with a better alternative and its cost. One point at a time. Nothing is acted on without confirmation. Adapted from the [grill-me/grilling split](https://github.com/mattpocock/skills) in mattpocock's skills collection.
 
-**Auto-triggers:** When the user proposes a plan or approach, asks a "should I / how should I" or "is this ok" question, or seeks confirmation — pure fact queries do not trigger.
-
-**Philosophy:** Every question carries hidden assumptions — question the question first. Every challenge must cite facts from the environment (code, git history, configs); no hollow "have you considered X". Every challenge comes with a better alternative and its cost. One point at a time, facts are arguable but preferences are the user's. Nothing is acted on without confirmation.
-
-**Allowed Tools:** Grep, Glob, Read, Bash
-
-**Key structure:** The `question-it` skill (auto-invoked primitive) carries the challenge technique; the `/question-it:interview` command is the manual decision-tree interview. Adapted from the [grill-me/grilling split](https://github.com/mattpocock/skills) in mattpocock's skills collection.
-
----
-
-### 6. Stop Spam PR (`not-spam-pr/`)
+### Stop Spam PR (`not-spam-pr/`)
 
 Stop spam PRs: surgical diffs in the repo's own commit/PR voice.
 
-**Version:** 1.1.0
-
 **Triggers:** implementing a feature or bugfix; writing a commit message, PR title, or PR body. Do not wait for "stop spam PR" / "drive-by". Skip review of other people's PRs, planning/question-it, gh-stack mechanics, Linear issue work, and extras the user explicitly asked for.
 
-**Philosophy:** House style, not a review lens. Stop spam PRs — only the change required for the request to be correct and green. On the request path, change or delete the existing implementation rather than wrapping it. Match `git log` — no templated PR bodies, no drive-by refactors.
+On the request path, change or delete the existing implementation rather than wrapping it. Match `git log` — no templated PR bodies, no drive-by refactors.
 
-**Allowed Tools:** Read, Grep, Glob, Bash
+### GitHub Stacked PRs (`gh-stack/`)
 
-**Key references:**
-- `references/drive-by.md` — required vs drive-by hunks
-- `references/voice.md` — read `git log` before writing commit/PR text
-- `examples/before-after.md` — diff and voice examples
+Manage GitHub stacked pull requests with the official `gh stack` extension.
 
----
+**Triggers:** "stacked PR", "PR stack", "stack of branches", "gh stack", splitting a large change into dependent pull requests.
 
-### 7. GitHub Stacked PRs (`gh-stack/`)
+Workflow: `init`/`add` to build the stack (plan layers first — see `references/stack-design.md`), `submit --auto` to create the PR chain, `sync` to rebase/push/sync PR state, `merge <pr|stack> --yes` to land it (never `gh pr merge`), `bottom`/`top`/`up`/`down`/`trunk` to navigate, `link` for stacks managed by external tools (jj, Sapling, git-town) without local tracking.
 
-Manage GitHub stacked pull requests with the official `gh stack` extension — break a large change into a chain of dependent PRs.
+`submit` opens an interactive editor in a terminal — pass `--auto` non-interactively (PRs become drafts unless `--open`). `sync` never opens PRs, only links existing ones. `modify`/`switch` are interactive TUIs. `view --json` gives machine-readable state; branch on exit codes (0-10), not stderr text. Metadata lives in `.git/gh-stack` (JSON, uncommitted). `gh stack init --adopt` is deprecated — branches auto-adopt.
 
-**Version:** 1.1.0
+### Herdr Subagents (`herdr-subagents/`)
 
-**Commands:**
-- `/gh-stack:setup` - Install and verify the gh-stack extension
+Spawn and coordinate subagents as real herdr panes via the `herdr` CLI.
 
-**Triggers:** "stacked PR", "PR stack", "stack of branches", "stack these branches", "gh stack", splitting a large change into dependent pull requests.
+**Triggers:** "subagent", "spawn an agent", "delegate to", "parallel agents", "use herdr panes", visible/detachable agent workers. Requires `HERDR_ENV=1`.
 
-**Workflow:** `init`/`add` to build the stack (plan layers first — see `references/stack-design.md`), `submit --auto` to create the PR chain, `sync` to rebase/push/sync PR state, `merge <pr|stack> --yes` to land it (never `gh pr merge`), `bottom`/`top`/`up`/`down`/`trunk` to navigate, `link` for stacks managed by external tools (jj, Sapling, git-town) without local tracking.
+Workflow: `agent start --kind pi` in a split pane → `agent prompt --wait` → `agent read recent-unwrapped` → `pane close`. Fire-and-forget via the callback bridge: subagents write `~/.pi/agent/callbacks/<HERDR_PANE_ID>/<name>.done`, `extensions/herdr-callbacks.ts` injects them into the session.
 
-**Key references:**
-- `references/stack-design.md` - Layer planning, branch naming, staging discipline
-- `references/commands.md` - Per-command preconditions, side effects, atomicity
-- `references/troubleshooting.md` - Exit-code recovery, squash merges, divergence, restructuring
+Callback delivery must stay per-pane — every pi instance (parent and subagents) loads the same extension. A shared `~/.pi/agent/callbacks/` races.
 
-**Agent notes:** `submit` opens an interactive editor in a terminal — pass `--auto` non-interactively (PRs become drafts unless `--open`). `sync` never opens PRs, only links existing ones. `modify`/`switch` are interactive TUIs. `view --json` gives machine-readable state; branch on exit codes (0-10), not stderr text. Metadata lives in `.git/gh-stack` (JSON, uncommitted).
+### Chrome DevTools (`chrome-devtools/`)
 
----
-
-### 8. Herdr Subagents (`herdr-subagents/`)
-
-Spawn and coordinate subagents as real herdr panes — visible, detachable, state-tracked delegation via the `herdr` CLI.
-
-**Version:** 1.0.0
-
-**Commands:**
-- `/herdr-subagents:spawn <task>` - Split a sibling pane, start a pi subagent, submit the task, collect the result
-
-**Triggers:** "subagent", "spawn an agent", "delegate to", "parallel agents", "use herdr panes", visible/detachable agent workers.
-
-**Workflow:** `agent start --kind pi` in a split pane → `agent prompt --wait` → `agent read recent-unwrapped` → `pane close`. Fire-and-forget via the callback bridge: subagents write `~/.pi/agent/callbacks/*.done`, the `herdr-callbacks.ts` extension injects them into the session.
-
-**Pi-oriented:** deliberately has NO `.claude-plugin/plugin.json` and is not in the marketplace — the orchestration is agent-agnostic, but the callback extension runs on pi's extension API. Requires `HERDR_ENV=1`.
-
-**Allowed Tools:** Bash, Read, Grep
-
----
-
-### 9. Chrome DevTools (`chrome-devtools/`)
-
-Attach to the user's already-open Chrome tab for local development verification via the `chrome-devtools` CLI (`--autoConnect`). After a short page snapshot, batch TypeSafe/Jev questions instead of dumping the DOM.
-
-**Version:** 1.0.0
+Attach to the user's already-open Chrome tab via the `chrome-devtools` CLI (`--autoConnect`). After a short page snapshot, batch TypeSafe/Jev questions instead of dumping the DOM.
 
 **Triggers:** look at the current page, a localhost URL already open, verify UI in the Chrome they are using. Not launching a new browser, web search, or MCP.
 
-**Pi-oriented:** no `.claude-plugin/plugin.json`, not in the marketplace — reaches pi via `pi.skills`. Wrapper at `scripts/chrome-devtools.sh` prefers chrome-devtools 1.9+ (PATH 1.1.0 cannot autoConnect). Jev via `typesafe_evaluate` (`npm:pi-typesafe`) is optional; ask for `/typesafe enable` if the tool is missing.
-
-**Allowed Tools:** Bash, Read
-
----
+Wrapper at `scripts/chrome-devtools.sh` prefers chrome-devtools 1.9+ (PATH 1.1.0 cannot autoConnect). Jev via `typesafe_evaluate` (`npm:pi-typesafe`) is optional; ask for `/typesafe enable` if the tool is missing.
 
 ## Development
 
-When modifying this repository:
+### Adding a skill
 
-### Adding a New Skill
-1. Create skill directory with `agents/`, `commands/`, `skills/` subdirectories
-2. Add `.claude-plugin/plugin.json` with skill metadata (name, version, keywords, author) — **skip this for pi-only skills** (like `herdr-subagents`): they are excluded from `marketplace.json` and reach pi through the `pi.skills` allowlist in `package.json` instead
-3. Create `skills/skill-name/SKILL.md` with description (when to load), allowed tools (YAML frontmatter)
-4. Create command markdown files in `commands/`
-5. Create agent markdown files in `agents/` (if needed; use `model: inherit`)
-6. Update root `.claude-plugin/marketplace.json` to reference the new skill
+1. Create `skill-name/SKILL.md` with description (when to load) and allowed tools in YAML frontmatter
+2. Add `"./skill-name"` to `package.json` `pi.skills`
+3. Bump `package.json` `version`
+
+Skill markdown (SKILL.md, examples) ships in English.
 
 ### Versioning
-- **IMPORTANT**: Increment version numbers in BOTH root `marketplace.json` and per-skill `plugin.json` before committing changes
-- Root `marketplace.json` version should be incremented when publishing any updates
-- Individual skill versions in `plugin.json` can vary independently
 
-### File Format Conventions
-- **Frontmatter** (YAML) in `SKILL.md` defines triggers and tool permissions
-- **Agent files** use frontmatter with `name`, `description`, `model: inherit`
-- **Command files** are pure markdown with usage documentation and embedded prompts
-- **Reference files** are markdown documentation (no frontmatter needed)
+Increment `package.json` `version` when publishing. There is no per-skill plugin manifest.
 
-### Command Prefix Convention
-Command prefixes match the skill directory name: `/vanilla-rails:*`, `/rails-deps:*`. Do NOT use shortened prefixes like `/vanilla:*`.
+### File format
+
+- Frontmatter in `SKILL.md` defines triggers and tool permissions
+- Reference files are markdown (no frontmatter needed)

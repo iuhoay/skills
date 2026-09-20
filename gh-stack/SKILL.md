@@ -31,10 +31,12 @@ layers, read `references/stack-design.md`.
 
 ## Setup
 
-Check the extension before first use in a session (`/gh-stack:setup` walks through this):
+Check the extension before first use in a session:
 
 ```bash
 gh extension list | grep stack || gh extension install github/gh-stack
+gh stack --help
+gh stack version
 git config rerere.enabled true         # remember conflict resolutions
 git config remote.pushDefault origin   # required if the repo has more than one remote
 ```

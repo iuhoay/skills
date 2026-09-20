@@ -1,23 +1,10 @@
-# /vanilla-rails:simplify
+# Simplify
 
 Plan incremental simplification of a Rails codebase toward Vanilla Rails philosophy.
 
-## Usage
+## Scope
 
-```
-/vanilla-rails:simplify                           # Plan overall simplification
-/vanilla-rails:simplify [goal]                    # Plan specific goal
-/vanilla-rails:simplify:services                  # Plan service layer reduction
-/vanilla-rails:simplify:models                    # Plan model enrichment
-```
-
-## Examples
-
-```
-/vanilla-rails:simplify "remove unnecessary services"
-/vanilla-rails:simplify "enrich Order model"
-/vanilla-rails:simplify "slim down OrdersController"
-```
+Plan overall simplification, a named goal (remove unnecessary services, enrich a model, slim a controller), service-layer reduction, or model enrichment.
 
 ## Process
 
