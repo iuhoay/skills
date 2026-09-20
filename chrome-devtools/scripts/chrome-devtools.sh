@@ -2,6 +2,7 @@
 set -euo pipefail
 
 PINNED='chrome-devtools-mcp@1.9.0'
+BIN='chrome-devtools'
 
 version_ok() {
   local raw last
@@ -36,8 +37,8 @@ run_cli() {
   local cli="$1"
   shift
   case "$cli" in
-    bunx) exec bunx "$PINNED" "$@" ;;
-    npx) exec npx --yes "$PINNED" "$@" ;;
+    bunx) exec bunx -p "$PINNED" "$BIN" "$@" ;;
+    npx) exec npx --yes --package "$PINNED" "$BIN" "$@" ;;
     *) exec "$cli" "$@" ;;
   esac
 }
