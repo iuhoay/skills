@@ -7,7 +7,7 @@ This file provides guidance to coding agents working in this repository.
 A monorepo of [Agent Skills](https://agentskills.io/specification) for coding agents. Install via the skills CLI, `gh skill install`, or as a Pi package (`iuhoay-skills`).
 
 - **Package name**: iuhoay-skills
-- **Version**: 1.18.1
+- **Version**: 1.18.2
 - **License**: MIT
 - **Owner**: iuhoay (https://github.com/iuhoay)
 
@@ -101,11 +101,11 @@ Callback delivery must stay per-pane — every pi instance (parent and subagents
 
 ### Chrome DevTools (`chrome-devtools/`)
 
-Attach to the user's already-open Chrome tab via the `chrome-devtools` CLI (`--autoConnect`). After a short page snapshot, batch TypeSafe/Jev questions instead of dumping the DOM.
+Attach to the user's already-open Chrome tab through Pi's `chrome-devtools` MCP server (`--autoConnect`). After a short page snapshot, batch TypeSafe/Jev questions instead of dumping the DOM.
 
-**Triggers:** look at the current page, a localhost URL already open, verify UI in the Chrome they are using. Not launching a new browser, web search, or MCP.
+**Triggers:** look at the current page, a localhost URL already open, verify UI in the Chrome they are using. Not launching a new browser, web search, or the CLI daemon.
 
-Wrapper at `scripts/chrome-devtools.sh` prefers chrome-devtools 1.9+ (PATH 1.1.0 cannot autoConnect). Jev via `typesafe_evaluate` (`npm:pi-typesafe`) is optional; ask for `/typesafe enable` if the tool is missing.
+Server entry is user-level `~/.pi/agent/mcp.json` only: `npx -y chrome-devtools-mcp@1.10.1 --autoConnect`. Tools are `mcp__chrome_devtools__list_pages`, `evaluate_script`, and `take_screenshot`. Jev via `typesafe_evaluate` (`npm:pi-typesafe`) is optional; ask for `/typesafe enable` if the tool is missing.
 
 ## Development
 

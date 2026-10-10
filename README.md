@@ -66,11 +66,11 @@ The callback bridge (`extensions/herdr-callbacks.ts`) is pi-only: it watches `~/
 
 ### Chrome DevTools
 
-Inspect the Chrome tab the user already has open — screenshot, evaluate, attach via `chrome-devtools --autoConnect`. Does not launch a second browser.
+Inspect the Chrome tab the user already has open — screenshot, evaluate, attach through Pi's `chrome-devtools` MCP server with `--autoConnect`. Does not launch a second browser.
 
 **Agent skill:** `chrome-devtools`
 
-Ships a wrapper that avoids PATH `chrome-devtools` 1.1.0 (cannot autoConnect on Chrome 153) and, after a short page snapshot, batches TypeSafe/Jev questions (`typesafe_evaluate`) instead of dumping the DOM. Requires Chrome remote debugging (`chrome://inspect/#remote-debugging`) and Full Disk Access for the terminal running pi.
+The server entry lives in user-level `~/.pi/agent/mcp.json` (`npx -y chrome-devtools-mcp@1.10.1 --autoConnect`), not a project file and not the old CLI daemon. After a short page snapshot, batches TypeSafe/Jev questions (`typesafe_evaluate`) instead of dumping the DOM. Requires Chrome remote debugging (`chrome://inspect/#remote-debugging`) and Full Disk Access for the terminal running pi.
 
 ## Installation
 
