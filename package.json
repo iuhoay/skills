@@ -1,6 +1,6 @@
 {
   "name": "iuhoay-skills",
-  "version": "1.18.2",
+  "version": "1.18.3",
   "description": "Development workflow skills for coding agents.",
   "license": "MIT",
   "author": {
@@ -10,9 +10,6 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/iuhoay/skills.git"
-  },
-  "engines": {
-    "node": ">=20"
   },
   "keywords": [
     "pi-package",
@@ -26,12 +23,6 @@
     "herdr",
     "subagents"
   ],
-  "bin": {
-    "linear": "./linear/scripts/linear.mjs"
-  },
-  "scripts": {
-    "test": "node --test linear/scripts/linear.test.mjs"
-  },
   "pi": {
     "skills": [
       "./vanilla-rails",

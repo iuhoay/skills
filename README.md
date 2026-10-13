@@ -24,11 +24,11 @@ Recommended gems: strong_migrations, herb, bullet, letter_opener.
 
 ### Linear
 
-Manage Linear issues through a bundled, JSON-first CLI. Do not replace it with Linear's hosted MCP: the CLI applies local git-origin team and project defaults, and the hosted server does not read that mapping.
+Manage Linear issues through Linear's hosted MCP. Before creating an issue, the skill applies local git-origin team and project defaults.
 
 **Agent skill:** `linear`
 
-The CLI supports OAuth 2.0 + PKCE login with automatic token refresh, issue search/read/create/update, comments, and a raw GraphQL escape hatch. Credentials are stored in macOS Keychain or a mode-0600 config file; `LINEAR_API_KEY` remains an optional fallback.
+Connect `https://mcp.linear.app/mcp`. The mapping file stays on the machine at `~/.config/linear-cli/repository-mappings.json` and is not committed.
 
 ### Question It
 
@@ -124,14 +124,13 @@ Then start a new Pi session, or run `/reload` in the current session. The packag
 - `/skill:herdr-subagents`
 - `/skill:chrome-devtools`
 
-## Linear CLI Setup
+## Linear
 
-The Linear skill's bundled CLI works across supported agents and requires Node.js 20 or newer. From a clone of this repository, install and authenticate the CLI with:
+Connect the hosted server in user-level Pi config, then sign in. Do not commit that file.
 
 ```bash
-node linear/scripts/linear.mjs install
-linear auth login
-linear issues list --team ENG
+pi mcp add linear --url https://mcp.linear.app/mcp --exposure deferred --description "Find, create, and update Linear issues, projects, and comments."
+pi mcp login linear
 ```
 
 ## License

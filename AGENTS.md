@@ -26,7 +26,7 @@ skill-name/
 Root:
 
 ```
-package.json    # pi.skills allowlist, linear bin, version
+package.json    # pi.skills allowlist, version
 README.md
 AGENTS.md
 ```
@@ -55,13 +55,11 @@ Workflows: check Gemfile/lock, install one gem, or walk through all four. Detail
 
 ### Linear (`linear/`)
 
-Manage Linear issues through a bundled JSON-first Node.js CLI, not Linear's hosted MCP. The CLI applies local git-origin team and project defaults; the hosted server does not read them.
+Manage Linear issues through the hosted MCP server. Before creating an issue, apply the local git-origin team and project mapping.
 
-**Triggers:** Linear issue search/read/create/update, pull-request linking, comments, and project-management requests. Use the CLI even when a Linear MCP server is connected.
+**Triggers:** Linear issue search/read/create/update, pull-request linking, comments, and project-management requests.
 
-**CLI:** `linear/scripts/linear.mjs` — direct GraphQL API access; OAuth 2.0 + PKCE is the default login, refreshable credentials live in macOS Keychain (or a mode-0600 config file), and `LINEAR_API_KEY` remains a fallback.
-
-Stay organization-neutral in shipped files: ENG/Platform/acme examples only. Real team/project mappings live in `~/.config` and must never enter Git. Multi-project repo mappings: `issues create` must fail without explicit `--project`; legacy `project` string shape must stay readable.
+Shipped files stay organization-neutral. Real mappings live in `~/.config` and must never enter Git. Details in `linear/SKILL.md`.
 
 ### Question It (`question-it/`)
 
