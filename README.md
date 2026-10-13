@@ -24,7 +24,7 @@ Recommended gems: strong_migrations, herb, bullet, letter_opener.
 
 ### Linear
 
-Manage Linear issues without MCP through a bundled, JSON-first CLI that calls Linear's GraphQL API directly.
+Manage Linear issues through a bundled, JSON-first CLI. Do not replace it with Linear's hosted MCP: the CLI applies local git-origin team and project defaults, and the hosted server does not read that mapping.
 
 **Agent skill:** `linear`
 

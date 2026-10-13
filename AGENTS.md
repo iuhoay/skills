@@ -55,9 +55,9 @@ Workflows: check Gemfile/lock, install one gem, or walk through all four. Detail
 
 ### Linear (`linear/`)
 
-Manage Linear issues without MCP through a bundled JSON-first Node.js CLI.
+Manage Linear issues through a bundled JSON-first Node.js CLI, not Linear's hosted MCP. The CLI applies local git-origin team and project defaults; the hosted server does not read them.
 
-**Triggers:** Linear issue search/read/create/update, pull-request linking, comments, and project-management requests.
+**Triggers:** Linear issue search/read/create/update, pull-request linking, comments, and project-management requests. Use the CLI even when a Linear MCP server is connected.
 
 **CLI:** `linear/scripts/linear.mjs` — direct GraphQL API access; OAuth 2.0 + PKCE is the default login, refreshable credentials live in macOS Keychain (or a mode-0600 config file), and `LINEAR_API_KEY` remains a fallback.
 

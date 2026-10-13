@@ -1,12 +1,12 @@
 ---
 name: linear
-description: Manage Linear issues from the shell through the bundled JSON-first CLI. Use when searching, reading, creating, updating, or commenting on Linear issues; linking pull requests to issues; or when the user asks for Linear project work without MCP.
+description: Manage Linear issues from the shell through the bundled JSON-first CLI. Use when searching, reading, creating, updating, or commenting on Linear issues, or when linking pull requests to issues. Use the CLI even if Linear's hosted MCP server is connected.
 allowed-tools: Bash Read
 ---
 
 # Linear
 
-Use the bundled CLI instead of MCP. It calls Linear's GraphQL API directly and prints JSON for reliable agent consumption.
+Use the bundled CLI instead of Linear's hosted MCP (`https://mcp.linear.app/mcp`), even when that server is connected. The CLI applies this git origin's team and project defaults from the local mapping file. The hosted MCP does not read that file, so it will not fill the team, apply a single mapped project, or refuse to guess when several projects are mapped.
 
 ## CLI
 
