@@ -7,8 +7,10 @@ description: >
   smaller overlay is still spam. Load when implementing a feature or bugfix,
   or when writing a commit message, PR title, or PR body. Do not wait for
   the user to say "stop spam PR", "spam PR", "drive-by", or "keep it small".
-  Skip review of other people's PRs, planning and question-it, gh-stack
-  mechanics, Linear issue work, and extras the user explicitly asked for.
+  Before a PR title or body, hand off to vanilla-rails review on that diff
+  and do not edit. A review asked for on its own is vanilla-rails, not this
+  skill. Also skip planning and question-it, gh-stack mechanics, Linear
+  issue work, and extras the user explicitly asked for.
 allowed-tools:
   - Read
   - Grep
@@ -32,7 +34,7 @@ Do not wait for "stop spam PR" / "spam PR" / "drive-by" / "keep it small".
 
 Skip:
 
-- Reviewing someone else's PR
+- A review asked for on its own — vanilla-rails, not this skill
 - Planning, "should I", confirmation (that's question-it)
 - gh-stack init/sync/merge/navigation
 - Linear issue search/create/update
@@ -80,6 +82,11 @@ A delete-and-rewrite of the request path is not drive-by. A new layer
 that exists so the old shape can stay is.
 
 ## Voice
+
+Before a PR title or body, load `vanilla-rails` and follow its review on
+this diff. Report only. Do not edit unless asked. If that skill is absent,
+or the diff is not Rails application code, skip the pass — do not invent a
+review.
 
 Before writing a commit message or PR title/body, read the repo:
 
