@@ -44,7 +44,7 @@ Stop spam PRs: only the change required for the request to be correct and green,
 
 **Agent skill:** `not-spam-pr` (auto-triggered on implement/fix and on commit/PR text)
 
-No drive-by refactors, extra files, or templated "This PR" bodies. On the request path, change or delete existing code rather than wrapping it. Match `git log`. Skip reviews, planning, gh-stack mechanics, and extras the user explicitly asked for.
+No drive-by refactors, extra files, or templated "This PR" bodies. On the request path, change or delete existing code rather than wrapping it. Match `git log`. Before a PR title or body, hand off to vanilla-rails review and do not edit. A review asked for on its own is vanilla-rails. Skip planning, gh-stack mechanics, and extras the user explicitly asked for.
 
 ### GitHub Stacked PRs
 

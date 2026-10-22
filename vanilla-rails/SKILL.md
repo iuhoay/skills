@@ -8,7 +8,8 @@ description: >
   routes, or form objects; when adding a custom action versus a nested
   resource; when extracting a service, form, query, or interactor; or when
   deciding where business logic lives. Also use for Rails reviews and
-  simplification. Do not wait for the user to say "vanilla rails" or
+  simplification, including a review handed off before a PR title or body.
+  Do not wait for the user to say "vanilla rails" or
   "service object". Skip migrations, gem/dependency bumps, CSS/JS/view-only
   work, credentials, and non-Rails tasks.
 allowed-tools:
@@ -73,7 +74,7 @@ This skill is the house style for Rails work, not an optional review lens. When 
 
 ## Review, analyze, simplify
 
-Use these only when the user asks to review, analyze, or plan a simplification — not as the default response to Rails implementation:
+Use these only when the user asks to review, analyze, or plan a simplification, or when not-spam-pr hands off a review before a PR title or body. Not the default response to Rails implementation:
 
 - Review code changes — [references/review.md](references/review.md)
 - Analyze a codebase — [references/analyze.md](references/analyze.md)

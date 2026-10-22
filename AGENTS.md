@@ -43,7 +43,7 @@ Default architecture constraint when writing Rails, from Vanilla Rails / 37signa
 
 **Philosophy:** House style, not a review lens. Thin controllers, rich domain models, no service layers unless genuinely justified.
 
-When the user asks to review, analyze, or plan a simplification, follow `references/review.md`, `references/analyze.md`, and `references/simplify.md`.
+When the user asks to review, analyze, or plan a simplification, or when not-spam-pr hands off a review before a PR title or body, follow `references/review.md`, `references/analyze.md`, and `references/simplify.md`.
 
 ### Rails Deps (`rails-deps/`)
 
@@ -73,7 +73,7 @@ Every challenge must cite facts from the environment; no hollow "have you consid
 
 Stop spam PRs: surgical diffs in the repo's own commit/PR voice.
 
-**Triggers:** implementing a feature or bugfix; writing a commit message, PR title, or PR body. Do not wait for "stop spam PR" / "drive-by". Skip review of other people's PRs, planning/question-it, gh-stack mechanics, Linear issue work, and extras the user explicitly asked for.
+**Triggers:** implementing a feature or bugfix; writing a commit message, PR title, or PR body. Do not wait for "stop spam PR" / "drive-by". Before a PR title or body, hand off to vanilla-rails review and do not edit. A review asked for on its own is vanilla-rails. Skip planning/question-it, gh-stack mechanics, Linear issue work, and extras the user explicitly asked for.
 
 On the request path, change or delete the existing implementation rather than wrapping it. Match `git log` — no templated PR bodies, no drive-by refactors.
 
